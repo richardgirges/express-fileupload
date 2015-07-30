@@ -13,7 +13,7 @@ module.exports = (options) ->
 
 			req.busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
 				file.on 'data', (data) ->
-					if options.log
+					if options.debug
 						console.log 'Uploading %s -> %s', fieldname, filename
 
 				file.on 'end', ->

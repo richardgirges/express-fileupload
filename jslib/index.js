@@ -14,7 +14,7 @@ module.exports = function(options) {
       req.files = null;
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         file.on('data', function(data) {
-          if (options.log) {
+          if (options.debug) {
             return console.log('Uploading %s -> %s', fieldname, filename);
           }
         });
