@@ -13,6 +13,7 @@
   },
   "keywords": [
     "express",
+    "file-upload",
     "upload",
     "forms",
     "multipart",
@@ -26,10 +27,7 @@
       "url": "https://github.com/richardgirges/express-fileupload/raw/master/LICENSE"
     }
   ],
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/richardgirges/express-fileupload.git"
-  },
+  "repository": "richardgirges/express-fileupload",
   "devDependencies": {
     "coffee-script": "^1.9.3",
     "gulp": "^3.9.0",
