@@ -1,4 +1,4 @@
-# express-fileupload
+express-fileupload
 ===========
 Simple express file upload middleware that wraps around [connect-busboy](https://github.com/mscdex/connect-busboy).
 
@@ -7,9 +7,6 @@ Install
 =======
 
     npm install express-fileupload
-
-
-https://github.com/mscdex/connect-busboy
 
 
 Example
