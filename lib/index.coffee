@@ -1,5 +1,5 @@
-busboy 	= require 'connect-busboy'
-fs 		= require 'fs-extra'
+busboy  = require 'connect-busboy'
+fs      = require 'fs-extra'
 
 module.exports = (options) ->
 	options = options or {}
@@ -35,4 +35,4 @@ module.exports = (options) ->
 			req.busboy.on 'finish', next
 
 			req.pipe req.busboy
-	)
+		)
