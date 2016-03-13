@@ -16,7 +16,10 @@ module.exports = (options) ->
 				req.body[fieldname] = val
 
 			req.busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
+				buf = new Buffer(0)
+
 				file.on 'data', (data) ->
+					buf = Buffer.concat([buf, data])
 					if options.debug
 						console.log 'Uploading %s -> %s', fieldname, filename
 
@@ -25,7 +28,7 @@ module.exports = (options) ->
 
 					req.files[fieldname] =
 						name: filename,
-						data: file
+						data: buf
 						encoding: encoding
 						mimetype: mimetype
 						mv: (path, callback) ->

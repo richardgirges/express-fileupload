@@ -17,7 +17,10 @@ module.exports = function(options) {
         return req.body[fieldname] = val;
       });
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+        var buf;
+        buf = new Buffer(0);
         file.on('data', function(data) {
+          buf = Buffer.concat([buf, data]);
           if (options.debug) {
             return console.log('Uploading %s -> %s', fieldname, filename);
           }
@@ -28,7 +31,7 @@ module.exports = function(options) {
           }
           return req.files[fieldname] = {
             name: filename,
-            data: file,
+            data: buf,
             encoding: encoding,
             mimetype: mimetype,
             mv: function(path, callback) {
