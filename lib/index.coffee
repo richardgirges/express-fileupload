@@ -11,6 +11,10 @@ module.exports = (options) ->
 
 			req.files = null
 
+			req.busboy.on 'field', (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) ->
+				req.body = req.body or {}
+				req.body[fieldname] = val
+
 			req.busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
 				file.on 'data', (data) ->
 					if options.debug

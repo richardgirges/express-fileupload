@@ -12,6 +12,10 @@ module.exports = function(options) {
         return next();
       }
       req.files = null;
+      req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+        req.body = req.body || {};
+        return req.body[fieldname] = val;
+      });
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         file.on('data', function(data) {
           if (options.debug) {
