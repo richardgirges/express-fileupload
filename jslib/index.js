@@ -1,8 +1,10 @@
-var busboy, fs;
+var busboy, fs, streamifier;
 
 busboy = require('connect-busboy');
 
 fs = require('fs-extra');
+
+streamifier = require('streamifier');
 
 module.exports = function(options) {
   options = options || {};
@@ -37,7 +39,7 @@ module.exports = function(options) {
             mv: function(path, callback) {
               var fstream;
               fstream = fs.createWriteStream(path);
-              this.data.pipe(fstream);
+              streamifier.createReadStream(buf).pipe(fstream);
               fstream.on('error', function(error) {
                 return callback(error);
               });
