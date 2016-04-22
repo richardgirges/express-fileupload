@@ -3,7 +3,7 @@
   "version": "0.0.4",
   "author": "Richard Girges <richardgirges@gmail.com>",
   "description": "Simple express file upload middleware that wraps around connect-busboy",
-  "main": "./jslib/index",
+  "main": "./lib/index",
   "dependencies": {
     "connect-busboy": "0.0.2",
     "fs-extra": "^0.22.1",
@@ -28,11 +28,5 @@
       "url": "https://github.com/richardgirges/express-fileupload/raw/master/LICENSE"
     }
   ],
-  "repository": "richardgirges/express-fileupload",
-  "devDependencies": {
-    "coffee-script": "^1.9.3",
-    "gulp": "^3.9.0",
-    "gulp-coffee": "^2.3.1",
-    "gulp-util": "^3.0.6"
-  }
+  "repository": "richardgirges/express-fileupload"
 }
