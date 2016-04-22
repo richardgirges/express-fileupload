@@ -28,5 +28,8 @@
       "url": "https://github.com/richardgirges/express-fileupload/raw/master/LICENSE"
     }
   ],
-  "repository": "richardgirges/express-fileupload"
+  "repository": "richardgirges/express-fileupload",
+  "devDependencies": {
+    "express": "^4.13.4"
+  }
 }
