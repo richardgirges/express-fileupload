@@ -6,6 +6,7 @@ ehthumbs.db
 Desktop.ini
 .directory
 *~
+npm-debug.log
 node_modules
 *.log
 *.gz
