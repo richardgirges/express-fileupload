@@ -6,7 +6,8 @@
   "main": "./jslib/index",
   "dependencies": {
     "connect-busboy": "0.0.2",
-    "fs-extra": "^0.22.1"
+    "fs-extra": "^0.22.1",
+    "streamifier": "^0.1.1"
   },
   "engines": {
     "node": ">=0.8.0"
