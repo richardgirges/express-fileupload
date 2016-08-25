@@ -9,6 +9,19 @@ Install
     npm install express-fileupload
 
 
+Important Note
+==============
+Add `app.use(fileUpload())` AFTER `app.use(bodyParser.json)` and any other bodyParser middlewares! This limitation will be explored and resolved in an upcoming release.
+
+Options
+=======
+Pass in Busboy options directly to express-fileupload (using Busboy `v0.2.13`). Check out the Busboy documentation here: https://github.com/mscdex/busboy#api
+```javascript
+app.use(fileUpload({
+	limits: { fileSize: 50 * 1024 * 1024 },
+}));
+```
+
 Example
 =======
 
