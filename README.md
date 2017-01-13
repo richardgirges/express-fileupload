@@ -1,31 +1,26 @@
-express-fileupload
-===========
+# express-fileupload
 Simple express file upload middleware that wraps around [connect-busboy](https://github.com/mscdex/connect-busboy).
 
+## Install
+```bash
+npm install express-fileupload
+```
 
-Install
-=======
+## Important Note
+Add `app.use(fileUpload())` *AFTER* `app.use(bodyParser.json)` and any other bodyParser middlewares! This limitation will be explored and resolved in an upcoming release.
 
-    npm install express-fileupload
-
-
-Important Note
-==============
-Add `app.use(fileUpload())` AFTER `app.use(bodyParser.json)` and any other bodyParser middlewares! This limitation will be explored and resolved in an upcoming release.
-
-Options
 =======
 Pass in Busboy options directly to express-fileupload (using Busboy `v0.2.13`). Check out the Busboy documentation here: https://github.com/mscdex/busboy#api
+
 ```javascript
 app.use(fileUpload({
 	limits: { fileSize: 50 * 1024 * 1024 },
 }));
 ```
 
-Example
-=======
+## Example
 
-### JavaScript
+### Node.js:
 
 ```javascript
 var express = require('express');
@@ -55,7 +50,7 @@ app.post('/upload', function(req, res) {
 });
 ```
 
-### Form
+### HTML Form:
 ```html
 <html>
 	<body>
