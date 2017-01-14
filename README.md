@@ -77,6 +77,26 @@ app.post('/upload', function(req, res) {
 </html>
 ```
 
+### Uploading Multiple Files
+express-fileupload supports multiple file uploads at the same time.
+
+Let's say you have three files in your form, each of the inputs with the name `my_profile_pic`, `my_pet`, and `my_cover_photo`:
+```html
+<input type="file" name="my_profile_pic" />
+<input type="file" name="my_pet" />
+<input type="file" name="my_cover_photo" />
+```
+
+These uploaded files would be accessible like so:
+```javascript
+app.post('/upload', function(req, res) {
+  // Uploaded files:
+  console.log(req.files.my_profile_pic.name);
+  console.log(req.files.my_pet.name);
+  console.log(req.files.my_cover_photo.name);
+});
+```
+
 ### Using Busboy Options
 Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here.](https://github.com/mscdex/busboy#api)
 
