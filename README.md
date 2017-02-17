@@ -1,6 +1,13 @@
 # Description
 Simple express middleware for uploading files.
 
+# Version 0.1.0 Breaking Change
+As of `v0.1.0`, there is NO MORE `application/x-www-form-urlencoded` SUPPORT!
+
+If you want to parse `urlencoded` requests, [use body-parser](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions).
+
+Moving forward, express-fileupload is considered a "multipart" solution only.
+
 # Install
 ```bash
 # With NPM
@@ -112,10 +119,6 @@ Pass in non-Busboy options directly to the middleware. These are express-fileupl
 Option | Acceptable&nbsp;Values | Details
 --- | --- | ---
 safeFileNames | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li>regex</li></ul> | Strips characters from the upload's filename. You can use custom regex to determine what to strip. If set to `true`, non-alphanumeric characters _except_ dashes and underscores will be stripped. This option is off by default.<br /><br />**Example #1 (strip slashes from file names):** `app.use(fileUpload({ safeFileNames: /\\/g }))`<br />**Example #2:** `app.use(fileUpload({ safeFileNames: true }))`
-
-# Known Bugs
-##### If you're using bodyParser middleware
-Add `app.use(fileUpload())` *AFTER* `app.use(bodyParser.json)` and any other `bodyParser` middlewares! This limitation will be investigated in an upcoming release.
 
 # Help Wanted
 Pull Requests are welcomed!

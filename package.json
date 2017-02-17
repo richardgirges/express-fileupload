@@ -1,12 +1,11 @@
 {
   "name": "express-fileupload",
-  "version": "0.0.7",
+  "version": "0.1.0-beta",
   "author": "Richard Girges <richardgirges@gmail.com>",
-  "description": "Simple express file upload middleware that wraps around connect-busboy",
+  "description": "Simple express file upload middleware that wraps around Busboy",
   "main": "./lib/index",
   "dependencies": {
     "busboy": "^0.2.14",
-    "connect-busboy": "0.0.2",
     "fs-extra": "^0.22.1",
     "streamifier": "^0.1.1"
   },
@@ -20,7 +19,7 @@
     "forms",
     "multipart",
     "files",
-    "connect-busboy",
+    "busboy",
     "middleware"
   ],
   "licenses": [
