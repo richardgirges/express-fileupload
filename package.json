@@ -5,6 +5,7 @@
   "description": "Simple express file upload middleware that wraps around connect-busboy",
   "main": "./lib/index",
   "dependencies": {
+    "busboy": "^0.2.14",
     "connect-busboy": "0.0.2",
     "fs-extra": "^0.22.1",
     "streamifier": "^0.1.1"

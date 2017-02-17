@@ -19,6 +19,8 @@ app.post('/upload', function(req, res) {
     return;
   }
 
+  console.log('req.files >>>', req.files);
+
   sampleFile = req.files.sampleFile;
 
   uploadPath = __dirname + '/uploadedfiles/' + sampleFile.name;
