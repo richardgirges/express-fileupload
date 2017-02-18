@@ -1,19 +1,19 @@
 # express-fileupload
 Simple express middleware for uploading files.
 
-[![npm Package](https://img.shields.io/npm/v/express-fileupload.svg?style=flat-square)](https://www.npmjs.org/package/express-fileupload)
+[![npm](https://img.shields.io/npm/v/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Build Status](https://travis-ci.org/richardgirges/express-fileupload.svg?branch=master)](https://travis-ci.org/richardgirges/express-fileupload)
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
-# Version 0.1.0 Breaking Changes
+# Version 0.1.0 Breaking Changes!
 
-### BREAKING CHANGE #1: No more urlencoded support
+#### &raquo; No more urlencoded support
 As of `v0.1.0`, there is NO MORE `application/x-www-form-urlencoded` SUPPORT! Moving forward, express-fileupload is considered a "multipart" solution only.
 
 If you want to parse `urlencoded` requests, [use body-parser](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions).
 
-### BREAKING CHANGE #2: Support for Node v4.x.x and above
+#### &raquo; Support for Node v4.x.x and above
 No more support for Node 0.8+. Use with lower versions of Node at your own risk!
 
 # Install
@@ -46,32 +46,26 @@ The **req.files.foo** object will contain the following:
 ### Full Example
 **Your node.js code:**
 ```javascript
-var express = require('express');
-var fileUpload = require('express-fileupload');
-var app = express();
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const app = express();
 
 // default options
 app.use(fileUpload());
 
 app.post('/upload', function(req, res) {
-  var sampleFile;
-
-  if (!req.files) {
-    res.send('No files were uploaded.');
-    return;
-  }
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
 
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  sampleFile = req.files.sampleFile;
+  let sampleFile = req.files.sampleFile;
 
   // Use the mv() method to place the file somewhere on your server
   sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-    else {
-      res.send('File uploaded!');
-    }
+    if (err)
+      return res.status(500).send(err);
+
+    res.send('File uploaded!');
   });
 });
 ```
