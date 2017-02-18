@@ -7,7 +7,7 @@
   "scripts": {
     "test": "istanbul cover _mocha -- -R spec",
     "lint": "eslint ./",
-    "coveralls": "COVERALLS_REPO_TOKEN=vNV8IQ0jJAuWGikebCeIHJryRulP6aEHa cat ./coverage/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "busboy": "^0.2.14",

@@ -4,8 +4,10 @@ node_js:
   - "5"
   - "6"
   - "7"
+env:
+  - COVERALLS_REPO_TOKEN=vNV8IQ0jJAuWGikebCeIHJryRulP6aEHa 
 script:
   - npm run lint
   - npm test
-  - npm run coverage
+  - npm run coveralls
 after_success: 'npm run coveralls'
