@@ -8,13 +8,13 @@ Simple express middleware for uploading files.
 
 # Version 0.1.0 Breaking Changes
 
-## BREAKING CHANGE: No more urlencoded support
+### BREAKING CHANGE: No more urlencoded support
 As of `v0.1.0`, there is NO MORE `application/x-www-form-urlencoded` SUPPORT! Moving forward, express-fileupload is considered a "multipart" solution only.
 
 If you want to parse `urlencoded` requests, [use body-parser](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions).
 
-## BREAKING CHANGE: Official support for Node v4.x.x +
-Use with lower versions of Node at your own risk!
+### BREAKING CHANGE: Support for Node v4.x.x and above
+No more support for Node 0.8+. Use with lower versions of Node at your own risk!
 
 # Install
 ```bash
