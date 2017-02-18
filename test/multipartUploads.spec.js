@@ -3,13 +3,11 @@
 const fs = require('fs');
 const path = require('path');
 const request = require('supertest');
-
-const {
-  clearUploadsDir,
-  fileDir,
-  uploadDir,
-  app
-} = require('./server');
+const server = require('./server');
+const app = server.app;
+const clearUploadsDir = server.clearUploadsDir;
+const fileDir = server.fileDir;
+const uploadDir = server.uploadDir;
 
 const mockFiles = [
   'car.png',

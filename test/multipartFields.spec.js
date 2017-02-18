@@ -1,10 +1,8 @@
 'use strict';
 
 const request = require('supertest');
-
-const {
-  app
-} = require('./server');
+const server = require('./server');
+const app = server.app;
 
 let mockUser = {
   firstName: 'Joe',
