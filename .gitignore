@@ -10,5 +10,7 @@ npm-debug.log
 node_modules
 *.log
 *.gz
-test/uploadedfiles/*
-!test/uploadedfiles/placeholder.txt
+
+test/uploads
+test/manual/uploads/*
+!test/manual/uploads/placeholder.txt

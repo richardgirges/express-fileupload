@@ -1,8 +1,8 @@
-var express    = require('express'),
-  fileUpload = require('../lib/index.js'),
-  app        = express();
+const express = require('express');
+const fileUpload = require('../../lib/index.js');
+const app = express();
 
-app.use('/form', express.static(__dirname + '/upload.test.html'));
+app.use('/form', express.static(__dirname + '/index.html'));
 
 // default options
 app.use(fileUpload());
@@ -12,7 +12,8 @@ app.get('/ping', function(req, res) {
 });
 
 app.post('/upload', function(req, res) {
-  var sampleFile, uploadPath;
+  let sampleFile;
+  let uploadPath;
 
   if (!req.files) {
     res.status(400).send('No files were uploaded.');
@@ -23,18 +24,16 @@ app.post('/upload', function(req, res) {
 
   sampleFile = req.files.sampleFile;
 
-  uploadPath = __dirname + '/uploadedfiles/' + sampleFile.name;
+  uploadPath = __dirname + '/uploads/' + sampleFile.name;
 
   sampleFile.mv(uploadPath, function(err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-    else {
-      res.send('File uploaded to ' + uploadPath);
-    }
+    if (err)
+      return res.status(500).send(err);
+
+    res.send('File uploaded to ' + uploadPath);
   });
 });
 
 app.listen(8000, function() {
   console.log('Express server listening on port 8000');
-})
+});

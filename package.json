@@ -1,16 +1,20 @@
 {
   "name": "express-fileupload",
-  "version": "0.1.0-beta",
+  "version": "0.1.0",
   "author": "Richard Girges <richardgirges@gmail.com>",
   "description": "Simple express file upload middleware that wraps around Busboy",
   "main": "./lib/index",
+  "scripts": {
+    "test": "mocha \"test/**/*.spec.js\"",
+    "lint": "eslint ./"
+  },
   "dependencies": {
     "busboy": "^0.2.14",
     "fs-extra": "^0.22.1",
     "streamifier": "^0.1.1"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=4.0.0"
   },
   "keywords": [
     "express",
@@ -22,14 +26,14 @@
     "busboy",
     "middleware"
   ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/richardgirges/express-fileupload/raw/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "repository": "richardgirges/express-fileupload",
   "devDependencies": {
-    "express": "^4.13.4"
+    "body-parser": "^1.16.1",
+    "eslint": "^3.15.0",
+    "eslint-config-google": "^0.7.1",
+    "express": "^4.13.4",
+    "mocha": "^3.2.0",
+    "supertest": "^3.0.0"
   }
 }

@@ -1,0 +1,17 @@
+{
+    "extends": "google",
+    "env": {
+      "node": true,
+      "mocha": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6
+    },
+    "rules": {
+      "comma-dangle": [2, "never"],
+      "max-len": [2, {
+        "code": 100,
+        "tabWidth": 2
+      }]
+    }
+}
