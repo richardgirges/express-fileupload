@@ -11,6 +11,7 @@ node_modules
 *.log
 *.gz
 
+coverage
 test/uploads
 test/manual/uploads/*
 !test/manual/uploads/placeholder.txt

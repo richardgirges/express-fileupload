@@ -1,4 +1,3 @@
-sudo: false
 language: node_js
 node_js:
   - "4"
@@ -6,5 +5,7 @@ node_js:
   - "6"
   - "7"
 script:
-  - npm test
   - npm run lint
+  - npm test
+  - npm run coverage
+after_success: 'npm run coveralls'
