@@ -13,8 +13,8 @@ As of `v0.1.0`, there is NO MORE `application/x-www-form-urlencoded` SUPPORT! Mo
 
 If you want to parse `urlencoded` requests, [use body-parser](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions).
 
-#### &raquo; Support for Node v4.x.x and above
-No more support for Node 0.8+. Use with lower versions of Node at your own risk!
+#### &raquo; No more support for < Node.js v4
+No more support for versions of Node older than v4. Use with lower versions of Node at your own risk!
 
 # Install
 ```bash
