@@ -35,6 +35,37 @@ app.all('/upload/single', function(req, res) {
   });
 });
 
+app.all('/upload/single/withfields', function(req, res) {
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
+
+  if (!req.body)
+    return res.status(400).send('No request body found');
+
+  if (!req.body.firstName || !req.body.firstName.trim())
+    return res.status(400).send('Invalid first name');
+
+  if (!req.body.lastName || !req.body.lastName.trim())
+    return res.status(400).send('Invalid last name');
+
+  if (!req.body.email || !req.body.email.trim())
+    return res.status(400).send('Invalid email');
+
+  let testFile = req.files.testFile;
+  let uploadPath = path.join(uploadDir, testFile.name);
+
+  testFile.mv(uploadPath, function(err) {
+    if (err)
+      return res.status(500).send(err);
+
+    res.json({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email
+    });
+  });
+});
+
 app.all('/upload/multiple', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');

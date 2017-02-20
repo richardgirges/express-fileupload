@@ -15,6 +15,12 @@ const mockFiles = [
   'basketball.png'
 ];
 
+let mockUser = {
+  firstName: 'Joe',
+  lastName: 'Schmo',
+  email: 'joe@mailinator.com'
+};
+
 describe('Test Directory Cleaning Method', function() {
   it('emptied "uploads" directory', function(done) {
     clearUploadsDir();
@@ -150,4 +156,35 @@ describe('Test File Array Upload', function() {
         done();
       });
   });
+});
+
+describe('Test Upload With Fields', function() {
+  for (let i = 0; i < mockFiles.length; i++) {
+    let fileName = mockFiles[i];
+
+    it(`upload ${fileName} and submit fields at the same time`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single/withfields')
+        .attach('testFile', filePath)
+        .field('firstName', mockUser.firstName)
+        .field('lastName', mockUser.lastName)
+        .field('email', mockUser.email)
+        .expect(200, {
+          firstName: mockUser.firstName,
+          lastName: mockUser.lastName,
+          email: mockUser.email
+        },
+        function(err, res) {
+          if (err)
+            return done(err);
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+  }
 });
