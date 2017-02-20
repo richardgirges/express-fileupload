@@ -162,7 +162,7 @@ describe('Test Upload With Fields', function() {
   for (let i = 0; i < mockFiles.length; i++) {
     let fileName = mockFiles[i];
 
-    it(`upload ${fileName} and submit fields at the same time`, function(done) {
+    it(`upload ${fileName} and submit fields at the same time with POST`, function(done) {
       let filePath = path.join(fileDir, fileName);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
@@ -170,6 +170,31 @@ describe('Test Upload With Fields', function() {
 
       request(app)
         .post('/upload/single/withfields')
+        .attach('testFile', filePath)
+        .field('firstName', mockUser.firstName)
+        .field('lastName', mockUser.lastName)
+        .field('email', mockUser.email)
+        .expect(200, {
+          firstName: mockUser.firstName,
+          lastName: mockUser.lastName,
+          email: mockUser.email
+        },
+        function(err, res) {
+          if (err)
+            return done(err);
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+
+    it(`upload ${fileName} and submit fields at the same time with PUT`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .put('/upload/single/withfields')
         .attach('testFile', filePath)
         .field('firstName', mockUser.firstName)
         .field('lastName', mockUser.lastName)
