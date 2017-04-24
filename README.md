@@ -40,8 +40,8 @@ app.post('/upload', function(req, res) {
 The **req.files.foo** object will contain the following:
 * `req.files.foo.name`: "car.jpg"
 * `req.files.foo.mv`: A function to move the file elsewhere on your server
-* `req.files.mimetype`: The mimetype of your file
-* `req.files.data`: A buffer representation of your file
+* `req.files.foo.mimetype`: The mimetype of your file
+* `req.files.foo.data`: A buffer representation of your file
 
 ### Full Example
 **Your node.js code:**
