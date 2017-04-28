@@ -2,7 +2,7 @@
 
 const request = require('supertest');
 const server = require('./server');
-const app = server.app;
+const app = server.setup();
 
 let mockUser = {
   firstName: 'Joe',
