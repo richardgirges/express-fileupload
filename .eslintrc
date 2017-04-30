@@ -1,17 +1,19 @@
 {
-    "extends": "google",
-    "env": {
-      "node": true,
-      "mocha": true
-    },
-    "parserOptions": {
-      "ecmaVersion": 6
-    },
-    "rules": {
-      "comma-dangle": [2, "never"],
-      "max-len": [2, {
-        "code": 100,
-        "tabWidth": 2
-      }]
-    }
+  "extends": "google",
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "comma-dangle": [2, "never"],
+    "max-len": [2, {
+      "code": 100,
+      "tabWidth": 2
+    }],
+    "keyword-spacing": 2,
+    "indent": [2, 2, { "SwitchCase": 1 }]
+  }
 }
