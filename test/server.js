@@ -12,7 +12,7 @@ const clearUploadsDir = function() {
   }
 };
 
-var setup = function(fileUploadOptions) {
+const setup = function(fileUploadOptions) {
   const express = require('express');
   const expressFileupload = require('../lib/index');
 
@@ -28,7 +28,7 @@ var setup = function(fileUploadOptions) {
     let testFile = req.files.testFile;
     let uploadPath = path.join(uploadDir, testFile.name);
 
-    testFile.mv(uploadPath, function (err) {
+    testFile.mv(uploadPath, function(err) {
       if (err)
         return res.status(500).send(err);
 
@@ -55,7 +55,7 @@ var setup = function(fileUploadOptions) {
     let testFile = req.files.testFile;
     let uploadPath = path.join(uploadDir, testFile.name);
 
-    testFile.mv(uploadPath, function (err) {
+    testFile.mv(uploadPath, function(err) {
       if (err)
         return res.status(500).send(err);
 
@@ -87,15 +87,15 @@ var setup = function(fileUploadOptions) {
     if (!testFile3)
       return res.status(400).send('testFile3 was not uploaded');
 
-    testFile1.mv(uploadPath1, function (err) {
+    testFile1.mv(uploadPath1, function(err) {
       if (err)
         return res.status(500).send(err);
 
-      testFile2.mv(uploadPath2, function (err) {
+      testFile2.mv(uploadPath2, function(err) {
         if (err)
           return res.status(500).send(err);
 
-        testFile3.mv(uploadPath3, function (err) {
+        testFile3.mv(uploadPath3, function(err) {
           if (err)
             return res.status(500).send(err);
 
@@ -124,7 +124,7 @@ var setup = function(fileUploadOptions) {
     for (let i = 0; i < testFiles.length; i++) {
       let uploadPath = path.join(uploadDir, testFiles[i].name);
 
-      testFiles[i].mv(uploadPath, function (err) {
+      testFiles[i].mv(uploadPath, function(err) {
         if (err)
           return res.status(500).send(err);
 

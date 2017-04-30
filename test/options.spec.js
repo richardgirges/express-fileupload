@@ -12,6 +12,31 @@ describe('File Upload Options Tests', function() {
     done();
   });
 
+  /**
+   * Upload the file for testing and verify the expected filename.
+   * @param {object} options The expressFileUpload options.
+   * @param {string} actualFileNameToUpload The name of the file to upload.
+   * @param {string} expectedFileNameOnFileSystem The name of the file after upload.
+   * @param {function} done The mocha continuation function.
+   */
+  function executeFileUploadTestWalk(options,
+                                     actualFileNameToUpload,
+                                     expectedFileNameOnFileSystem,
+                                     done) {
+    request(server.setup(options))
+      .post('/upload/single')
+      .attach('testFile', path.join(fileDir, actualFileNameToUpload))
+      .expect(200)
+      .end(function(err) {
+        if (err)
+          return done(err);
+
+        const uploadedFilePath = path.join(uploadDir, expectedFileNameOnFileSystem);
+
+        fs.stat(uploadedFilePath, done);
+      });
+  }
+
   describe('Testing [safeFileNames] option to ensure:', function() {
     it('Does nothing to your filename when disabled.',
       function(done) {
@@ -159,27 +184,4 @@ describe('File Upload Options Tests', function() {
         executeFileUploadTestWalk(fileUploadOptions, actualFileName, expectedFileName, done);
       });
   });
-
-  function executeFileUploadTestWalk(options,
-                                     actualFileNameToUpload,
-                                     expectedFilNameOnFileSystem,
-                                     done) {
-    const argsUnderTest = options;
-    const app = server.setup(argsUnderTest);
-    const actualFileName = actualFileNameToUpload;
-    const expectedFileName = expectedFilNameOnFileSystem;
-
-    request(app)
-      .post('/upload/single')
-      .attach('testFile', path.join(fileDir, actualFileName))
-      .expect(200)
-      .end(function(err) {
-        if (err)
-          return done(err);
-
-        const uploadedFilePath = path.join(uploadDir, expectedFileName);
-
-        fs.stat(uploadedFilePath, done);
-      });
-  }
 });
