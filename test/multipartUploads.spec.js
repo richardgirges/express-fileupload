@@ -102,6 +102,77 @@ describe('Test Single File Upload', function() {
   });
 });
 
+describe('Test Single File Upload w/ .mv() Promise', function() {
+  for (let i = 0; i < mockFiles.length; i++) {
+    let fileName = mockFiles[i];
+
+    it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single/promise')
+        .attach('testFile', filePath)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+
+    it(`upload ${fileName} with PUT w/ .mv() Promise`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single/promise')
+        .attach('testFile', filePath)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+  }
+
+  it('fail when no files were attached', function(done) {
+    request(app)
+      .post('/upload/single')
+      .expect(400)
+      .end(done);
+  });
+
+  it('fail when using GET', function(done) {
+    let filePath = path.join(fileDir, mockFiles[0]);
+
+    request(app)
+      .get('/upload/single')
+      .attach('testFile', filePath)
+      .expect(400)
+      .end(done);
+  });
+
+  it('fail when using HEAD', function(done) {
+    let filePath = path.join(fileDir, mockFiles[0]);
+
+    request(app)
+      .head('/upload/single')
+      .attach('testFile', filePath)
+      .expect(400)
+      .end(done);
+  });
+});
+
 describe('Test Multi-File Upload', function() {
   it('upload multiple files with POST', function(done) {
     let upload1 = path.join(fileDir, mockFiles[0]);

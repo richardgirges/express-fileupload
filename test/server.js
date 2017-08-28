@@ -38,6 +38,23 @@ const setup = function(fileUploadOptions) {
     });
   });
 
+  app.all('/upload/single/promise', function(req, res) {
+    if (!req.files) {
+      return res.status(400).send('No files were uploaded.');
+    }
+
+    let testFile = req.files.testFile;
+    let uploadPath = path.join(uploadDir, testFile.name);
+
+    testFile.mv(uploadPath)
+      .then(() => {
+        res.send('File uploaded to ' + uploadPath);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  });
+
   app.all('/upload/single/withfields', function(req, res) {
     if (!req.files) {
       return res.status(400).send('No files were uploaded.');
