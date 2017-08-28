@@ -6,15 +6,13 @@ Simple express middleware for uploading files.
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
-# Version 0.1.0 Breaking Changes!
+# Version 0.2.0 Breaking Changes
 
-#### &raquo; No more urlencoded support
-As of `v0.1.0`, there is NO MORE `application/x-www-form-urlencoded` SUPPORT! Moving forward, express-fileupload is considered a "multipart" solution only.
+#### &raquo; Promise support for `.mv()`
+`.mv()` now returns a Promise when `callback` argument is not provided
 
-If you want to parse `urlencoded` requests, [use body-parser](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions).
-
-#### &raquo; No more support for < Node.js v4
-No more support for versions of Node older than v4. Use with lower versions of Node at your own risk!
+#### &raquo; No more support for < Node.js v6
+No more support for versions of Node older than v6. Use with lower versions of Node at your own risk!
 
 # Install
 ```bash
