@@ -46,8 +46,9 @@ describe('Test Single File Upload', function() {
         .attach('testFile', filePath)
         .expect(200)
         .end(function(err, res) {
-          if (err)
+          if (err) {
             return done(err);
+          }
 
           fs.stat(uploadedFilePath, done);
         });
@@ -64,8 +65,9 @@ describe('Test Single File Upload', function() {
         .attach('testFile', filePath)
         .expect(200)
         .end(function(err, res) {
-          if (err)
+          if (err) {
             return done(err);
+          }
 
           fs.stat(uploadedFilePath, done);
         });
@@ -115,16 +117,19 @@ describe('Test Multi-File Upload', function() {
       .attach('testFile3', upload3)
       .expect(200)
       .end(function(err, res) {
-        if (err)
+        if (err) {
           return done(err);
+        }
 
         fs.stat(upload1, function(err) {
-          if (err)
+          if (err) {
             return done(err);
+          }
 
           fs.stat(upload2, function(err) {
-            if (err)
+            if (err) {
               return done(err);
+            }
 
             fs.stat(upload3, done);
           });
@@ -146,8 +151,9 @@ describe('Test File Array Upload', function() {
     req
       .expect(200)
       .end(function(err, res) {
-        if (err)
+        if (err) {
           return done(err);
+        }
 
         for (let i = 0; i < mockFiles.length; i++) {
           fs.statSync(path.join(uploadDir, mockFiles[i]));
@@ -180,8 +186,9 @@ describe('Test Upload With Fields', function() {
           email: mockUser.email
         },
         function(err, res) {
-          if (err)
+          if (err) {
             return done(err);
+          }
 
           fs.stat(uploadedFilePath, done);
         });
@@ -205,8 +212,9 @@ describe('Test Upload With Fields', function() {
           email: mockUser.email
         },
         function(err, res) {
-          if (err)
+          if (err) {
             return done(err);
+          }
 
           fs.stat(uploadedFilePath, done);
         });

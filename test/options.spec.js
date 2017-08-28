@@ -20,16 +20,17 @@ describe('File Upload Options Tests', function() {
    * @param {function} done The mocha continuation function.
    */
   function executeFileUploadTestWalk(options,
-                                     actualFileNameToUpload,
-                                     expectedFileNameOnFileSystem,
-                                     done) {
+    actualFileNameToUpload,
+    expectedFileNameOnFileSystem,
+    done) {
     request(server.setup(options))
       .post('/upload/single')
       .attach('testFile', path.join(fileDir, actualFileNameToUpload))
       .expect(200)
       .end(function(err) {
-        if (err)
+        if (err) {
           return done(err);
+        }
 
         const uploadedFilePath = path.join(uploadDir, expectedFileNameOnFileSystem);
 

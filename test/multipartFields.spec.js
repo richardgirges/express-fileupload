@@ -73,8 +73,9 @@ describe('Test Multipart Form Array Field Submissions', function() {
     req
       .expect(200)
       .end(function(err, res) {
-        if (err)
+        if (err) {
           return done(err);
+        }
 
         let responseMatchesRequest = res.body.join(',') === mockCars.join(',');
 
