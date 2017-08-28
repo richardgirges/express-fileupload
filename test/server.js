@@ -22,42 +22,50 @@ const setup = function(fileUploadOptions) {
   app.use(expressFileupload(fileUploadOptions));
 
   app.all('/upload/single', function(req, res) {
-    if (!req.files)
+    if (!req.files) {
       return res.status(400).send('No files were uploaded.');
+    }
 
     let testFile = req.files.testFile;
     let uploadPath = path.join(uploadDir, testFile.name);
 
     testFile.mv(uploadPath, function(err) {
-      if (err)
+      if (err) {
         return res.status(500).send(err);
+      }
 
       res.send('File uploaded to ' + uploadPath);
     });
   });
 
   app.all('/upload/single/withfields', function(req, res) {
-    if (!req.files)
+    if (!req.files) {
       return res.status(400).send('No files were uploaded.');
+    }
 
-    if (!req.body)
+    if (!req.body) {
       return res.status(400).send('No request body found');
+    }
 
-    if (!req.body.firstName || !req.body.firstName.trim())
+    if (!req.body.firstName || !req.body.firstName.trim()) {
       return res.status(400).send('Invalid first name');
+    }
 
-    if (!req.body.lastName || !req.body.lastName.trim())
+    if (!req.body.lastName || !req.body.lastName.trim()) {
       return res.status(400).send('Invalid last name');
+    }
 
-    if (!req.body.email || !req.body.email.trim())
+    if (!req.body.email || !req.body.email.trim()) {
       return res.status(400).send('Invalid email');
+    }
 
     let testFile = req.files.testFile;
     let uploadPath = path.join(uploadDir, testFile.name);
 
     testFile.mv(uploadPath, function(err) {
-      if (err)
+      if (err) {
         return res.status(500).send(err);
+      }
 
       res.json({
         firstName: req.body.firstName,
@@ -68,8 +76,9 @@ const setup = function(fileUploadOptions) {
   });
 
   app.all('/upload/multiple', function(req, res) {
-    if (!req.files)
+    if (!req.files) {
       return res.status(400).send('No files were uploaded.');
+    }
 
     let testFile1 = req.files.testFile1;
     let testFile2 = req.files.testFile2;
@@ -78,26 +87,32 @@ const setup = function(fileUploadOptions) {
     let uploadPath2 = path.join(uploadDir, testFile2.name);
     let uploadPath3 = path.join(uploadDir, testFile3.name);
 
-    if (!testFile1)
+    if (!testFile1) {
       return res.status(400).send('testFile1 was not uploaded');
+    }
 
-    if (!testFile2)
+    if (!testFile2) {
       return res.status(400).send('testFile2 was not uploaded');
+    }
 
-    if (!testFile3)
+    if (!testFile3) {
       return res.status(400).send('testFile3 was not uploaded');
+    }
 
     testFile1.mv(uploadPath1, function(err) {
-      if (err)
+      if (err) {
         return res.status(500).send(err);
+      }
 
       testFile2.mv(uploadPath2, function(err) {
-        if (err)
+        if (err) {
           return res.status(500).send(err);
+        }
 
         testFile3.mv(uploadPath3, function(err) {
-          if (err)
+          if (err) {
             return res.status(500).send(err);
+          }
 
           res.send('Files uploaded to ' + uploadDir);
         });
@@ -106,46 +121,56 @@ const setup = function(fileUploadOptions) {
   });
 
   app.all('/upload/array', function(req, res) {
-    if (!req.files)
+    if (!req.files) {
       return res.status(400).send('No files were uploaded.');
+    }
 
     let testFiles = req.files.testFiles;
 
-    if (!testFiles)
+    if (!testFiles) {
       return res.status(400).send('No files were uploaded');
+    }
 
-    if (!Array.isArray(testFiles))
+    if (!Array.isArray(testFiles)) {
       return res.status(400).send('Files were not uploaded as an array');
+    }
 
-    if (!testFiles.length)
+    if (!testFiles.length) {
       return res.status(400).send('Files array is empty');
+    }
 
     let filesUploaded = 0;
     for (let i = 0; i < testFiles.length; i++) {
       let uploadPath = path.join(uploadDir, testFiles[i].name);
 
       testFiles[i].mv(uploadPath, function(err) {
-        if (err)
+        if (err) {
           return res.status(500).send(err);
+        }
 
-        if (++filesUploaded === testFiles.length)
+        if (++filesUploaded === testFiles.length) {
           res.send('File uploaded to ' + uploadPath);
+        }
       });
     }
   });
 
   app.all('/fields/user', function(req, res) {
-    if (!req.body)
+    if (!req.body) {
       return res.status(400).send('No request body found');
+    }
 
-    if (!req.body.firstName || !req.body.firstName.trim())
+    if (!req.body.firstName || !req.body.firstName.trim()) {
       return res.status(400).send('Invalid first name');
+    }
 
-    if (!req.body.lastName || !req.body.lastName.trim())
+    if (!req.body.lastName || !req.body.lastName.trim()) {
       return res.status(400).send('Invalid last name');
+    }
 
-    if (!req.body.email || !req.body.email.trim())
+    if (!req.body.email || !req.body.email.trim()) {
       return res.status(400).send('Invalid email');
+    }
 
     res.json({
       firstName: req.body.firstName,
@@ -155,14 +180,17 @@ const setup = function(fileUploadOptions) {
   });
 
   app.all('/fields/array', function(req, res) {
-    if (!req.body)
+    if (!req.body) {
       return res.status(400).send('No request body found');
+    }
 
-    if (!req.body.testField)
+    if (!req.body.testField) {
       return res.status(400).send('Invalid field');
+    }
 
-    if (!Array.isArray(req.body.testField))
+    if (!Array.isArray(req.body.testField)) {
       return res.status(400).send('Field is not an array');
+    }
 
     res.json(req.body.testField);
   });

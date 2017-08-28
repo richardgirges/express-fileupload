@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "busboy": "^0.2.14",
-    "fs-extra": "^0.22.1",
+    "fs-extra": "^4.0.1",
     "streamifier": "^0.1.1"
   },
   "engines": {
@@ -30,13 +30,13 @@
   "license": "MIT",
   "repository": "richardgirges/express-fileupload",
   "devDependencies": {
-    "body-parser": "^1.16.1",
-    "coveralls": "^2.11.16",
-    "eslint": "^3.15.0",
-    "eslint-config-google": "^0.7.1",
-    "express": "^4.13.4",
+    "body-parser": "^1.17.2",
+    "coveralls": "^2.13.1",
+    "eslint": "^4.5.0",
+    "eslint-config-google": "^0.9.1",
+    "express": "^4.15.4",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0",
+    "mocha": "^3.5.0",
     "supertest": "^3.0.0"
   }
 }
