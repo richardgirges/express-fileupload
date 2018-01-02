@@ -92,6 +92,19 @@ const setup = function(fileUploadOptions) {
     });
   });
 
+  app.all('/upload/single/truncated', function(req, res) {
+    if (!req.files) {
+      return res.status(400).send('No files were uploaded.');
+    }
+
+    if (req.files.testFile.truncated) {
+      // status 400 to differentiate from ending the request in the on limit
+      return res.status(400).send(`File too big`);
+    }
+
+    return res.status(200).send('Upload succeed');
+  });
+
   app.all('/upload/multiple', function(req, res) {
     if (!req.files) {
       return res.status(400).send('No files were uploaded.');
