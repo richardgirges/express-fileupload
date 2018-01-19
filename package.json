@@ -12,6 +12,7 @@
   "dependencies": {
     "busboy": "^0.2.14",
     "fs-extra": "^4.0.1",
+    "md5": "^2.2.1",
     "streamifier": "^0.1.1"
   },
   "engines": {
