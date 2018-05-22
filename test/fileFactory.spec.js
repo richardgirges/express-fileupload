@@ -4,7 +4,7 @@ const assert = require('assert');
 const fs = require('fs');
 const md5 = require('md5');
 const path = require('path');
-const fileFactory = require('../lib/fileFactory');
+const fileFactory = require('../lib').fileFactory;
 const server = require('./server');
 
 const mockBuffer = fs.readFileSync(path.join(server.fileDir, 'basketball.png'));
