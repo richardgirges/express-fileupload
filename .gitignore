@@ -14,5 +14,5 @@ node_modules
 
 coverage
 test/uploads
-test/manual/uploads/*
-!test/manual/uploads/placeholder.txt
+example/uploads/*
+!example/uploads/placeholder.txt

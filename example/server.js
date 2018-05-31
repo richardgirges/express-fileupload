@@ -1,5 +1,5 @@
 const express = require('express');
-const fileUpload = require('../../lib/index.js');
+const fileUpload = require('../lib/index.js');
 const app = express();
 
 app.use('/form', express.static(__dirname + '/index.html'));
@@ -20,7 +20,7 @@ app.post('/upload', function(req, res) {
     return;
   }
 
-  console.log('req.files >>>', req.files);
+  console.log('req.files >>>', req.files); // eslint-disable-line
 
   sampleFile = req.files.sampleFile;
 
@@ -36,5 +36,5 @@ app.post('/upload', function(req, res) {
 });
 
 app.listen(8000, function() {
-  console.log('Express server listening on port 8000');
+  console.log('Express server listening on port 8000'); // eslint-disable-line
 });

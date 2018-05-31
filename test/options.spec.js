@@ -68,7 +68,7 @@ describe('File Upload Options Tests', function() {
 
     it('Accepts a regex for stripping (decidedly) "invalid" characters from filename.',
       function(done) {
-        const fileUploadOptions = {safeFileNames: /[\$#]/g};
+        const fileUploadOptions = {safeFileNames: /[$#]/g};
         const actualFileName = 'my$Invalid#fileName.png123';
         const expectedFileName = 'myInvalidfileName.png123';
 

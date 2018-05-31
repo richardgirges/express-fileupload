@@ -45,7 +45,7 @@ describe('Test Single File Upload', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(200)
-        .end(function(err, res) {
+        .end(function(err) {
           if (err) {
             return done(err);
           }
@@ -64,7 +64,7 @@ describe('Test Single File Upload', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(200)
-        .end(function(err, res) {
+        .end(function(err) {
           if (err) {
             return done(err);
           }
@@ -116,7 +116,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
         .post('/upload/single/promise')
         .attach('testFile', filePath)
         .expect(200)
-        .end(function(err, res) {
+        .end(function(err) {
           if (err) {
             return done(err);
           }
@@ -135,7 +135,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
         .post('/upload/single/promise')
         .attach('testFile', filePath)
         .expect(200)
-        .end(function(err, res) {
+        .end(function(err) {
           if (err) {
             return done(err);
           }
@@ -187,7 +187,7 @@ describe('Test Multi-File Upload', function() {
       .attach('testFile2', upload2)
       .attach('testFile3', upload3)
       .expect(200)
-      .end(function(err, res) {
+      .end(function(err) {
         if (err) {
           return done(err);
         }
@@ -221,7 +221,7 @@ describe('Test File Array Upload', function() {
 
     req
       .expect(200)
-      .end(function(err, res) {
+      .end(function(err) {
         if (err) {
           return done(err);
         }
@@ -256,7 +256,7 @@ describe('Test Upload With Fields', function() {
           lastName: mockUser.lastName,
           email: mockUser.email
         },
-        function(err, res) {
+        function(err) {
           if (err) {
             return done(err);
           }
@@ -282,7 +282,7 @@ describe('Test Upload With Fields', function() {
           lastName: mockUser.lastName,
           email: mockUser.email
         },
-        function(err, res) {
+        function(err) {
           if (err) {
             return done(err);
           }
