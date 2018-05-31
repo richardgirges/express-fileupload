@@ -3,13 +3,15 @@
 const path = require('path');
 const fileDir = path.join(__dirname, 'files');
 const uploadDir = path.join(__dirname, 'uploads');
-const fs = require('fs-extra');
+const fs = require('fs');
+const rimraf = require('rimraf');
 
 const clearUploadsDir = function() {
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
   } else {
-    fs.emptyDirSync(uploadDir);
+    rimraf.sync(uploadDir);
+    fs.mkdirSync(uploadDir);
   }
 };
 
@@ -32,6 +34,7 @@ const setup = function(fileUploadOptions) {
 
     testFile.mv(uploadPath, function(err) {
       if (err) {
+        console.log('ERR', err);
         return res.status(500).send(err);
       }
 
