@@ -16,6 +16,7 @@
       "code": 100,
       "tabWidth": 2
     }],
+    "semi": 2,
     "keyword-spacing": 2,
     "indent": [2, 2, { "SwitchCase": 1 }]
   }
