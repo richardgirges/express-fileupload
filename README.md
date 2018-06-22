@@ -114,6 +114,20 @@ app.use(fileUpload({
 }));
 ```
 
+### limitHandler
+Function to execute when the busboy `fileSize` limit has been exceeded, and `abortOnLimit` is `true`.
+
+```javascript
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+  abortOnLimit: true,
+  limitHandler: function (req, res, next) {
+    res.writeHead(413, { 'Connection': 'close' });
+    res.end('File size limit has been reached');
+  }
+}));
+```
+
 ### Available Options
 Pass in non-Busboy options directly to the middleware. These are express-fileupload specific options.
 
@@ -121,7 +135,8 @@ Option | Acceptable&nbsp;Values | Details
 --- | --- | ---
 safeFileNames | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li>regex</li></ul> | Strips characters from the upload's filename. You can use custom regex to determine what to strip. If set to `true`, non-alphanumeric characters _except_ dashes and underscores will be stripped. This option is off by default.<br /><br />**Example #1 (strip slashes from file names):** `app.use(fileUpload({ safeFileNames: /\\/g }))`<br />**Example #2:** `app.use(fileUpload({ safeFileNames: true }))`
 preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li><code>*Number*</code></li></ul> | Preserves filename extension when using <code>safeFileNames</code> option. If set to <code>true</code>, will default to an extension length of 3. If set to <code>*Number*</code>, this will be the max allowable extension length. If an extension is smaller than the extension length, it remains untouched. If the extension is longer, it is shifted.<br /><br />**Example #1 (true):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: true }));</code><br />*myFileName.ext* --> *myFileName.ext*<br /><br />**Example #2 (max extension length 2, extension shifted):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: 2 }));</code><br />*myFileName.ext* --> *myFileNamee.xt*
-abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncate = true</code> to the resulting file structure.
+abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Calls the limitHandler. Returns on default a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncate = true</code> to the resulting file structure.
+limitHandler | <ul><li><code>function</code></li> | A function to execute when the busboy `fileSize` limit has been exceeded and `abortOnLimit` is `true`. It contains the request and response objects, and the next function if you need to parse to the next middleware.
 
 # Help Wanted
 Pull Requests are welcomed!
