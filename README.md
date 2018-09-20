@@ -1,4 +1,5 @@
-# !! LOOKING FOR ADDITIONAL MAINTAINERS !!
+## !! LOOKING FOR ADDITIONAL MAINTAINERS !!
+Contact @richardgirges if you're interested.
 
 # express-fileupload
 Simple express middleware for uploading files.
