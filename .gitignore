@@ -16,3 +16,5 @@ coverage
 test/uploads
 example/uploads/*
 !example/uploads/placeholder.txt
+
+yarn.lock
