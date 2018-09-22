@@ -7,17 +7,7 @@ Simple express middleware for uploading files.
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
 # Version 1.0.0 Breaking Changes
-
-#### &raquo; `md5` property is now a function
-Before:
-```javascript
-req.files.profilePic.md5 // 69e2168484c82575f21bd8feca7aab86
-```
-
-After:
-```javascript
-req.files.profilePic.md5() // 69e2168484c82575f21bd8feca7aab86
-```
+Breaking change to `md5` handling. [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
 
 # Install
 ```bash
