@@ -72,7 +72,7 @@ describe('Test of the fileFactory factory', function() {
       assert.equal(fileFactory({
         name: 'basketball.png',
         buffer: mockBuffer
-      }).md5, mockMd5);
+      }).md5(), mockMd5);
     });
   });
 });

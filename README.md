@@ -44,6 +44,7 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.mimetype`: The mimetype of your file
 * `req.files.foo.data`: A buffer representation of your file
 * `req.files.foo.truncated`: A boolean that represents if the file is over the size limit
+* `req.files.foo.md5`: A function that returns an MD5 checksum of the uploaded file
 
 ### Full Example
 **Your node.js code:**

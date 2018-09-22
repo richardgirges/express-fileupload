@@ -34,7 +34,7 @@ const setup = function(fileUploadOptions) {
 
     testFile.mv(uploadPath, function(err) {
       if (err) {
-        console.log('ERR', err);
+        console.log('ERR', err); // eslint-disable-line
         return res.status(500).send(err);
       }
 
