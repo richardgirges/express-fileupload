@@ -53,7 +53,6 @@ The **req.files.foo** object will contain the following:
 * [Example Project](https://github.com/richardgirges/express-fileupload/tree/master/example)
 * [Basic File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload)
 * [Multi-File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#multi-file-upload)
-* [Multi-File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#multi-file-upload)
 
 ### Using Busboy Options
 Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here.](https://github.com/mscdex/busboy#api)
