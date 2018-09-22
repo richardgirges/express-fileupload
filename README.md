@@ -1,6 +1,3 @@
-## !! LOOKING FOR ADDITIONAL MAINTAINERS !!
-Contact @richardgirges if you're interested.
-
 # express-fileupload
 Simple express middleware for uploading files.
 
@@ -9,13 +6,18 @@ Simple express middleware for uploading files.
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
-# Version 0.2.0 Breaking Changes
+# Version 1.0.0 Breaking Changes
 
-#### &raquo; Promise support for `.mv()`
-`.mv()` now returns a Promise when `callback` argument is not provided
+#### &raquo; `md5` property is now a function
+Before:
+```javascript
+req.files.profilePic.md5 // 69e2168484c82575f21bd8feca7aab86
+```
 
-#### &raquo; No more support for < Node.js v6
-No more support for versions of Node older than v6. Use with lower versions of Node at your own risk!
+After:
+```javascript
+req.files.profilePic.md5() // 69e2168484c82575f21bd8feca7aab86
+```
 
 # Install
 ```bash
@@ -29,7 +31,7 @@ yarn add express-fileupload
 # Usage
 When you upload a file, the file will be accessible from `req.files`.
 
-### Example Scenario
+Example:
 * You're uploading a file called **car.jpg**
 * Your input's name field is **foo**: `<input name="foo" type="file" />`
 * In your express server request, you can access your uploaded file from `req.files.foo`:
@@ -38,6 +40,7 @@ app.post('/upload', function(req, res) {
   console.log(req.files.foo); // the uploaded file object
 });
 ```
+
 The **req.files.foo** object will contain the following:
 * `req.files.foo.name`: "car.jpg"
 * `req.files.foo.mv`: A function to move the file elsewhere on your server
@@ -46,68 +49,11 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.truncated`: A boolean that represents if the file is over the size limit
 * `req.files.foo.md5`: A function that returns an MD5 checksum of the uploaded file
 
-### Full Example
-**Your node.js code:**
-```javascript
-const express = require('express');
-const fileUpload = require('express-fileupload');
-const app = express();
-
-// default options
-app.use(fileUpload());
-
-app.post('/upload', function(req, res) {
-  if (!req.files)
-    return res.status(400).send('No files were uploaded.');
-
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  let sampleFile = req.files.sampleFile;
-
-  // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err) {
-    if (err)
-      return res.status(500).send(err);
-
-    res.send('File uploaded!');
-  });
-});
-```
-
-**Your HTML file upload form:**
-```html
-<html>
-  <body>
-    <form ref='uploadForm' 
-      id='uploadForm' 
-      action='http://localhost:8000/upload' 
-      method='post' 
-      encType="multipart/form-data">
-        <input type="file" name="sampleFile" />
-        <input type='submit' value='Upload!' />
-    </form>     
-  </body>
-</html>
-```
-
-### Uploading Multiple Files
-express-fileupload supports multiple file uploads at the same time.
-
-Let's say you have three files in your form, each of the inputs with the name `my_profile_pic`, `my_pet`, and `my_cover_photo`:
-```html
-<input type="file" name="my_profile_pic" />
-<input type="file" name="my_pet" />
-<input type="file" name="my_cover_photo" />
-```
-
-These uploaded files would be accessible like so:
-```javascript
-app.post('/upload', function(req, res) {
-  // Uploaded files:
-  console.log(req.files.my_profile_pic.name);
-  console.log(req.files.my_pet.name);
-  console.log(req.files.my_cover_photo.name);
-});
-```
+### Examples
+* [Example Project](https://github.com/richardgirges/express-fileupload/tree/master/example)
+* [Basic File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload)
+* [Multi-File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#multi-file-upload)
+* [Multi-File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#multi-file-upload)
 
 ### Using Busboy Options
 Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here.](https://github.com/mscdex/busboy#api)
