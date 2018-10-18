@@ -15,7 +15,7 @@ app.post('/upload', function(req, res) {
   let sampleFile;
   let uploadPath;
 
-  if (!req.files) {
+  if (Object.keys(req.files).length == 0) {
     res.status(400).send('No files were uploaded.');
     return;
   }
