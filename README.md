@@ -64,7 +64,7 @@ preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>
 abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncate = true</code> to the resulting file structure.
 
 # Help Wanted
-Pull Requests are welcomed!
+Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcomed! 
 
 # Thanks & Credit
 [Brian White](https://github.com/mscdex) for his stellar work on the [Busboy Package](https://github.com/mscdex/busboy) and the [connect-busboy Package](https://github.com/mscdex/connect-busboy)
