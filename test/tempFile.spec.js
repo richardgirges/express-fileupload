@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const request = require("supertest");
-const server = require("./server");
+const fs = require('fs');
+const path = require('path');
+const request = require('supertest');
+const server = require('./server');
 const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
-describe("File Upload Options Tests", function() {
+describe('File Upload Options Tests', function() {
   afterEach(function(done) {
     clearUploadsDir();
     done();
@@ -24,8 +24,8 @@ describe("File Upload Options Tests", function() {
     done
   ) {
     request(server.setup(options))
-      .post("/upload/single")
-      .attach("testFile", path.join(fileDir, actualFileNameToUpload))
+      .post('/upload/single')
+      .attach('testFile', path.join(fileDir, actualFileNameToUpload))
       .expect(200)
       .end(function(err) {
         if (err) {
@@ -38,15 +38,15 @@ describe("File Upload Options Tests", function() {
         fs.stat(uploadedFilePath, done);
       });
   }
-  describe("Testing [safeFileNames with useTempFiles] option to ensure:", function() {
-    it("Does nothing to your filename when disabled.", function(done) {
+  describe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
+    it('Does nothing to your filename when disabled.', function(done) {
       const fileUploadOptions = {
         safeFileNames: false,
         useTempFiles: true,
-        tempFileDir: "/tmp/"
+        tempFileDir: '/tmp/'
       };
-      const actualFileName = "my$Invalid#fileName.png123";
-      const expectedFileName = "my$Invalid#fileName.png123";
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'my$Invalid#fileName.png123';
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
@@ -54,10 +54,10 @@ describe("File Upload Options Tests", function() {
         done
       );
     });
-    it("Is disabled by default.", function(done) {
-      const fileUploadOptions = { useTempFiles: true, tempFileDir: "/tmp/" };
-      const actualFileName = "my$Invalid#fileName.png123";
-      const expectedFileName = "my$Invalid#fileName.png123";
+    it('Is disabled by default.', function(done) {
+      const fileUploadOptions = { useTempFiles: true, tempFileDir: '/tmp/' };
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'my$Invalid#fileName.png123';
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
@@ -65,14 +65,14 @@ describe("File Upload Options Tests", function() {
         done
       );
     });
-    it("Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.", function(done) {
+    it('Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.', function(done) {
       const fileUploadOptions = {
         safeFileNames: true,
         useTempFiles: true,
-        tempFileDir: "/tmp/"
+        tempFileDir: '/tmp/'
       };
-      const actualFileName = "my$Invalid#fileName.png123";
-      const expectedFileName = "myInvalidfileNamepng123";
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'myInvalidfileNamepng123';
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
@@ -84,10 +84,10 @@ describe("File Upload Options Tests", function() {
       const fileUploadOptions = {
         safeFileNames: /[\$#]/g,
         useTempFiles: true,
-        tempFileDir: "/tmp/"
+        tempFileDir: '/tmp/'
       };
-      const actualFileName = "my$Invalid#fileName.png123";
-      const expectedFileName = "myInvalidfileName.png123";
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'myInvalidfileName.png123';
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
