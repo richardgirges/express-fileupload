@@ -52,7 +52,17 @@ describe('File Upload Options Tests', function() {
         );
       });
   }
-  describe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
+  it('works', function(done){
+    const fileUploadOptions = {
+      safeFileNames: false,
+      useTempFiles: true,
+      tempFileDir: '/tmp/'
+    };
+    const actualFileName = 'foo.txt';
+    const expectedFileName = 'foo.txt';
+    executeFileUploadTestWalk(fileUploadOptions, actualFileName, expectedFileName, done);
+  });
+  xdescribe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
     it('Does nothing to your filename when disabled.', function(done) {
       const fileUploadOptions = {
         safeFileNames: false,
@@ -87,7 +97,7 @@ describe('File Upload Options Tests', function() {
       );
     });
 
-    xit(
+    it(
       'Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.', 
       function(done) {
         const fileUploadOptions = {
@@ -105,7 +115,7 @@ describe('File Upload Options Tests', function() {
         );
       });
 
-    xit(
+    it(
       'Accepts a regex for stripping (decidedly) "invalid" characters from filename.', 
       function(done) {
         const fileUploadOptions = {
