@@ -1,5 +1,5 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
+const fileUpload = require('../lib/index');
 const app = express();
 
 const PORT = 8000;
