@@ -5,8 +5,8 @@ node_js:
   - "8"
   - "9"
   - "10"
-env:
-  - COVERALLS_REPO_TOKEN=vNV8IQ0jJAuWGikebCeIHJryRulP6aEHa 
+# env:
+  # - COVERALLS_REPO_TOKEN=vNV8IQ0jJAuWGikebCeIHJryRulP6aEHa 
 script:
   - npm run lint
   - npm test
