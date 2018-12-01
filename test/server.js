@@ -29,7 +29,6 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('No files were uploaded.');
     }
 
-    console.log('in server >>>>>', req.files);
     let testFile = req.files.testFile;
     let uploadPath = path.join(uploadDir, testFile.name);
 

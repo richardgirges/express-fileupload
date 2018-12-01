@@ -52,17 +52,7 @@ describe('File Upload Options Tests', function() {
         );
       });
   }
-  it('works', function(done){
-    const fileUploadOptions = {
-      safeFileNames: false,
-      useTempFiles: true,
-      tempFileDir: '/tmp/'
-    };
-    const actualFileName = 'foo.txt';
-    const expectedFileName = 'foo.txt';
-    executeFileUploadTestWalk(fileUploadOptions, actualFileName, expectedFileName, done);
-  });
-  xdescribe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
+  describe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
     it('Does nothing to your filename when disabled.', function(done) {
       const fileUploadOptions = {
         safeFileNames: false,
