@@ -46,7 +46,6 @@ describe('File Upload Options Tests', function() {
           uploadDir,
           expectedFileNameOnFileSystem
         );
-        console.log('this is where it breaks!!!', fs.readdirSync(path.dirname(uploadedFilePath)));
         fs.stat(
           uploadedFilePath,
           done
