@@ -185,4 +185,35 @@ describe('File Upload Options Tests', function() {
         executeFileUploadTestWalk(fileUploadOptions, actualFileName, expectedFileName, done);
       });
   });
+
+  describe('Testing [parseNested] option to ensure:', function() {
+    it('When [parseNested] is enabled result are nested', function(done){
+      const app = server.setup({parseNested: true});
+      request(app)
+        .post('/fields/nested')
+        .field('name', 'John')
+        .field('hobbies[0]', 'Cinema')
+        .field('hobbies[1]', 'Bike')
+        .expect('Content-Type', /json/)
+        .expect(200, {
+          name: 'John',
+          hobbies: ['Cinema', 'Bike']
+        }, done);
+    });
+
+    it('When [parseNested] is disabled are flattened', function(done){
+      const app = server.setup({parseNested: false});
+      request(app)
+        .post('/fields/flattened')
+        .field('name', 'John')
+        .field('hobbies[0]', 'Cinema')
+        .field('hobbies[1]', 'Bike')
+        .expect('Content-Type', /json/)
+        .expect(200, {
+          name: 'John',
+          'hobbies[0]': 'Cinema',
+          'hobbies[1]': 'Bike'
+        }, done);
+    });
+  });
 });
