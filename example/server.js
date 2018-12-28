@@ -1,7 +1,8 @@
 const express = require('express');
-const fileUpload = require('../lib/index.js');
+const fileUpload = require('../lib/index');
 const app = express();
 
+const PORT = 8000;
 app.use('/form', express.static(__dirname + '/index.html'));
 
 // default options
@@ -35,6 +36,6 @@ app.post('/upload', function(req, res) {
   });
 });
 
-app.listen(8000, function() {
-  console.log('Express server listening on port 8000'); // eslint-disable-line
+app.listen(PORT, function() {
+  console.log('Express server listening on port ', PORT); // eslint-disable-line
 });

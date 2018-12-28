@@ -50,11 +50,12 @@ const setup = function(fileUploadOptions) {
     let testFile = req.files.testFile;
     let uploadPath = path.join(uploadDir, testFile.name);
 
-    testFile.mv(uploadPath)
+    testFile
+      .mv(uploadPath)
       .then(() => {
         res.send('File uploaded to ' + uploadPath);
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(500).send(err);
       });
   });
