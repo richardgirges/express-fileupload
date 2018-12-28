@@ -74,6 +74,7 @@ preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>
 abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncate = true</code> to the resulting file structure.
 useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Will use temporary files at the specified tempDir for managing uploads rather than using buffers in memory. This avoids memory issues when uploading large files.
 tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Used with the <code>useTempFiles</code> option. Path to the directory where temp files will be stored during the upload process. Add trailing slash.
+parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
 
 # Help Wanted
 Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcomed! 

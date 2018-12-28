@@ -214,6 +214,49 @@ const setup = function(fileUploadOptions) {
     });
   });
 
+  app.all('/fields/nested', function(req, res) {
+    if (!req.body) {
+      return res.status(400).send('No request body found');
+    }
+
+    if (!req.body.name || !req.body.name.trim()) {
+      return res.status(400).send('Invalid name');
+    }
+
+    if (!req.body.hobbies || !req.body.hobbies.length == 2) {
+      return res.status(400).send('Invalid hobbies');
+    }
+
+    res.json({
+      name: req.body.name,
+      hobbies: req.body.hobbies
+    });
+  });
+
+  app.all('/fields/flattened', function(req, res) {
+    if (!req.body) {
+      return res.status(400).send('No request body found');
+    }
+
+    if (!req.body.name || !req.body.name.trim()) {
+      return res.status(400).send('Invalid name');
+    }
+
+    if (!req.body['hobbies[0]'] || !req.body['hobbies[0]'].trim()) {
+      return res.status(400).send('Invalid hobbies[0]');
+    }
+
+    if (!req.body['hobbies[1]'] || !req.body['hobbies[1]'].trim()) {
+      return res.status(400).send('Invalid hobbies[1]');
+    }
+
+    res.json({
+      name: req.body.name,
+      'hobbies[0]': req.body['hobbies[0]'],
+      'hobbies[1]': req.body['hobbies[1]']
+    });
+  });
+
   app.all('/fields/array', function(req, res) {
     if (!req.body) {
       return res.status(400).send('No request body found');
