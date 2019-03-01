@@ -290,7 +290,7 @@ describe('Test File Array Upload', function() {
     let expectedResult = [];
     let expectedResultSorted = [];
     let uploadedFilesPath = [];
-    mockFiles.forEach((fileName, index) => {
+    mockFiles.forEach((fileName) => {
       let filePath = path.join(fileDir, fileName);
       let fileStat = fs.statSync(filePath);
       uploadedFilesPath.push(path.join(uploadDir, fileName));
