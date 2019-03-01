@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "busboy": "^0.2.14",
-    "md5": "^2.2.1",
     "streamifier": "^0.1.1"
   },
   "engines": {
@@ -30,6 +29,7 @@
   "license": "MIT",
   "repository": "richardgirges/express-fileupload",
   "devDependencies": {
+    "md5": "^2.2.1",
     "body-parser": "^1.18.3",
     "coveralls": "^3.0.2",
     "eslint": "^5.9.0",
