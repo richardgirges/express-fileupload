@@ -9,7 +9,7 @@ Simple express middleware for uploading files.
 # Version 1.1.1 Breaking Changes
 Breaking change to `md5` handling. 
 md5 again returns a hash value instead of function which compute the hash.
-md5 hashes know can be generated when using tempFiles.
+md5 hashes now can be used with tempFiles.
 
 # Version 1.0.0 Breaking Changes
 Breaking change to `md5` handling. [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
