@@ -6,7 +6,7 @@ Simple express middleware for uploading files.
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
-# Version 1.0.1 Breaking Changes
+# Version 1.1.1 Breaking Changes
 Breaking change to `md5` handling. 
 md5 again returns a hash value instead of function which compute the hash.
 md5 hashes know can be generated when using tempFiles.
@@ -42,6 +42,7 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.mimetype`: The mimetype of your file
 * `req.files.foo.data`: A buffer representation of your file
 * `req.files.foo.truncated`: A boolean that represents if the file is over the size limit
+* `req.files.foo.size`: Uploaded size in bytes
 * `req.files.foo.md5`: MD5 checksum of the uploaded file
 
 ### Examples
