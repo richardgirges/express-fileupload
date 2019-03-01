@@ -9,6 +9,11 @@ const server = require('./server');
 
 const mockBuffer = fs.readFileSync(path.join(server.fileDir, 'basketball.png'));
 
+/**
+ * Returns true if argument is function.
+ */
+const isFunc = func => (func && func.constructor && func.call && func.apply) ? true : false;
+
 describe('Test of the fileFactory factory', function() {
   beforeEach(function() {
     server.clearUploadsDir();
@@ -71,8 +76,15 @@ describe('Test of the fileFactory factory', function() {
       const mockMd5 = md5(mockBuffer);
       assert.equal(fileFactory({
         name: 'basketball.png',
+        buffer: mockBuffer,
+        hash: mockMd5
+      }).md5, mockMd5);
+    });
+    it('contains the mv method', function() {
+      assert.equal(isFunc(fileFactory({
+        name: 'basketball.png',
         buffer: mockBuffer
-      }).md5(), mockMd5);
+      }).mv), true);
     });
   });
 });
