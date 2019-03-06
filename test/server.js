@@ -38,7 +38,14 @@ const setup = function(fileUploadOptions) {
         return res.status(500).send(err);
       }
 
-      res.send('File uploaded to ' + uploadPath);
+      //res.send('File uploaded to ' + uploadPath);
+      res.json({
+        name: testFile.name,
+        uploadDir: uploadDir,
+        uploadPath: uploadPath,
+        md5: testFile.md5,
+        size: testFile.size
+      });
     });
   });
 
@@ -53,7 +60,13 @@ const setup = function(fileUploadOptions) {
     testFile
       .mv(uploadPath)
       .then(() => {
-        res.send('File uploaded to ' + uploadPath);
+        res.json({
+          name: testFile.name,
+          uploadDir: uploadDir,
+          uploadPath: uploadPath,
+          md5: testFile.md5,
+          size: testFile.size
+        });
       })
       .catch(err => {
         res.status(500).send(err);
@@ -92,7 +105,12 @@ const setup = function(fileUploadOptions) {
       res.json({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        email: req.body.email
+        email: req.body.email,
+        name: testFile.name,
+        uploadDir: uploadDir,
+        uploadPath: uploadPath,
+        md5: testFile.md5,
+        size: testFile.size
       });
     });
   });
@@ -149,7 +167,30 @@ const setup = function(fileUploadOptions) {
             return res.status(500).send(err);
           }
 
-          res.send('Files uploaded to ' + uploadDir);
+          //res.send('Files uploaded to ' + uploadDir);
+          res.json([
+            {
+              name: testFile1.name,
+              uploadDir: uploadDir,
+              uploadPath: uploadPath1,
+              md5: testFile1.md5,
+              size: testFile1.size
+            },
+            {
+              name: testFile2.name,
+              uploadDir: uploadDir,
+              uploadPath: uploadPath2,
+              md5: testFile2.md5,
+              size: testFile2.size
+            },
+            {
+              name: testFile2.name,
+              uploadDir: uploadDir,
+              uploadPath: uploadPath2,
+              md5: testFile2.md5,
+              size: testFile2.size
+            }
+          ]);
         });
       });
     });
@@ -174,7 +215,7 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('Files array is empty');
     }
 
-    let filesUploaded = 0;
+    let uploadResults = [];
     for (let i = 0; i < testFiles.length; i++) {
       let uploadPath = path.join(uploadDir, testFiles[i].name);
 
@@ -183,8 +224,16 @@ const setup = function(fileUploadOptions) {
           return res.status(500).send(err);
         }
 
-        if (++filesUploaded === testFiles.length) {
-          res.send('File uploaded to ' + uploadPath);
+        uploadResults.push({
+          name: testFiles[i].name,
+          uploadDir: uploadDir,
+          uploadPath: uploadPath,
+          md5: testFiles[i].md5,
+          size: testFiles[i].size
+        });
+
+        if (uploadResults.length === testFiles.length) {
+          res.json(uploadResults);
         }
       });
     }

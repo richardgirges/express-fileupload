@@ -6,6 +6,11 @@ Simple express middleware for uploading files.
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
+# Version 1.1.1 Breaking Changes
+Breaking change to `md5` handling. 
+md5 again returns a hash value instead of function which compute the hash.
+md5 hashes now can be used with tempFiles.
+
 # Version 1.0.0 Breaking Changes
 Breaking change to `md5` handling. [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
 
@@ -37,7 +42,8 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.mimetype`: The mimetype of your file
 * `req.files.foo.data`: A buffer representation of your file
 * `req.files.foo.truncated`: A boolean that represents if the file is over the size limit
-* `req.files.foo.md5`: A function that returns an MD5 checksum of the uploaded file
+* `req.files.foo.size`: Uploaded size in bytes
+* `req.files.foo.md5`: MD5 checksum of the uploaded file
 
 ### Examples
 * [Example Project](https://github.com/richardgirges/express-fileupload/tree/master/example)
@@ -55,7 +61,7 @@ app.use(fileUpload({
 
 ### Using useTempFile Options
 Use temp files instead of memory for managing the upload process.
-Please note: md5 hashes will not be generated when using tempFiles
+
 ```javascript
 app.use(fileUpload({
     useTempFiles : true,

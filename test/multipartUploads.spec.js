@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const md5 = require('md5');
 const path = require('path');
 const request = require('supertest');
 const server = require('./server');
@@ -37,6 +38,9 @@ describe('Test Single File Upload', function() {
 
     it(`upload ${fileName} with POST`, function(done) {
       let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
       clearUploadsDir();
@@ -44,7 +48,17 @@ describe('Test Single File Upload', function() {
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect(200)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
         .end(function(err) {
           if (err) {
             return done(err);
@@ -56,6 +70,9 @@ describe('Test Single File Upload', function() {
 
     it(`upload ${fileName} with PUT`, function(done) {
       let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
       clearUploadsDir();
@@ -63,7 +80,17 @@ describe('Test Single File Upload', function() {
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect(200)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
         .end(function(err) {
           if (err) {
             return done(err);
@@ -108,6 +135,9 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
 
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
       clearUploadsDir();
@@ -115,7 +145,17 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
-        .expect(200)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
         .end(function(err) {
           if (err) {
             return done(err);
@@ -127,6 +167,9 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
 
     it(`upload ${fileName} with PUT w/ .mv() Promise`, function(done) {
       let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
       clearUploadsDir();
@@ -134,7 +177,17 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
-        .expect(200)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
         .end(function(err) {
           if (err) {
             return done(err);
@@ -175,34 +228,53 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
 
 describe('Test Multi-File Upload', function() {
   it('upload multiple files with POST', function(done) {
-    let upload1 = path.join(fileDir, mockFiles[0]);
-    let upload2 = path.join(fileDir, mockFiles[1]);
-    let upload3 = path.join(fileDir, mockFiles[2]);
+    let req = request(app).post('/upload/multiple');
 
     clearUploadsDir();
 
-    request(app)
-      .post('/upload/multiple')
-      .attach('testFile1', upload1)
-      .attach('testFile2', upload2)
-      .attach('testFile3', upload3)
-      .expect(200)
+    let expectedResult = [];
+    let expectedResultSorted = [];
+    let uploadedFilesPath = [];
+    mockFiles.forEach((fileName, index) => {
+      let filePath = path.join(fileDir, fileName);
+      let fileStat = fs.statSync(filePath);
+      uploadedFilesPath.push(path.join(uploadDir, fileName));
+      expectedResult.push({
+        name:fileName,
+        md5: md5(fs.readFileSync(filePath)),
+        size: fileStat.size,
+        uploadDir: '',
+        uploadPath: ''
+      });
+      req.attach(`testFile${index+1}`, filePath);
+    });
+
+    req
+      .expect((res)=>{
+        res.body.forEach(fileInfo => {
+          fileInfo.uploadDir = '';
+          fileInfo.uploadPath = '';
+          let index = mockFiles.indexOf(fileInfo.name);
+          expectedResultSorted.push(expectedResult[index]);
+        });
+      })
+      .expect(200, expectedResultSorted)
       .end(function(err) {
         if (err) {
           return done(err);
         }
 
-        fs.stat(upload1, function(err) {
+        fs.stat(uploadedFilesPath[0], function(err) {
           if (err) {
             return done(err);
           }
 
-          fs.stat(upload2, function(err) {
+          fs.stat(uploadedFilesPath[1], function(err) {
             if (err) {
               return done(err);
             }
 
-            fs.stat(upload3, done);
+            fs.stat(uploadedFilesPath[2], done);
           });
         });
       });
@@ -215,20 +287,41 @@ describe('Test File Array Upload', function() {
 
     clearUploadsDir();
 
-    for (let i = 0; i < mockFiles.length; i++) {
-      req.attach('testFiles', path.join(fileDir, mockFiles[i]));
-    }
+    let expectedResult = [];
+    let expectedResultSorted = [];
+    let uploadedFilesPath = [];
+    mockFiles.forEach((fileName) => {
+      let filePath = path.join(fileDir, fileName);
+      let fileStat = fs.statSync(filePath);
+      uploadedFilesPath.push(path.join(uploadDir, fileName));
+      expectedResult.push({
+        name:fileName,
+        md5: md5(fs.readFileSync(filePath)),
+        size: fileStat.size,
+        uploadDir: '',
+        uploadPath: ''
+      });
+      req.attach('testFiles', filePath);
+    });
 
     req
-      .expect(200)
+      .expect((res)=>{
+        res.body.forEach(fileInfo => {
+          fileInfo.uploadDir = '';
+          fileInfo.uploadPath = '';
+          let index = mockFiles.indexOf(fileInfo.name);
+          expectedResultSorted.push(expectedResult[index]);
+        });
+      })
+      .expect(200, expectedResultSorted)
       .end(function(err) {
         if (err) {
           return done(err);
         }
 
-        for (let i = 0; i < mockFiles.length; i++) {
-          fs.statSync(path.join(uploadDir, mockFiles[i]));
-        }
+        uploadedFilesPath.forEach(function(uploadedFilePath){
+          fs.statSync(uploadedFilePath);
+        });
 
         done();
       });
@@ -241,6 +334,9 @@ describe('Test Upload With Fields', function() {
 
     it(`upload ${fileName} and submit fields at the same time with POST`, function(done) {
       let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
       clearUploadsDir();
@@ -251,10 +347,19 @@ describe('Test Upload With Fields', function() {
         .field('firstName', mockUser.firstName)
         .field('lastName', mockUser.lastName)
         .field('email', mockUser.email)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
         .expect(200, {
           firstName: mockUser.firstName,
           lastName: mockUser.lastName,
-          email: mockUser.email
+          email: mockUser.email,
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
         },
         function(err) {
           if (err) {
@@ -267,6 +372,10 @@ describe('Test Upload With Fields', function() {
 
     it(`upload ${fileName} and submit fields at the same time with PUT`, function(done) {
       let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileStat = fs.statSync(filePath);
+
+      let fileHash = md5(fileBuffer);
       let uploadedFilePath = path.join(uploadDir, fileName);
 
       clearUploadsDir();
@@ -277,10 +386,19 @@ describe('Test Upload With Fields', function() {
         .field('firstName', mockUser.firstName)
         .field('lastName', mockUser.lastName)
         .field('email', mockUser.email)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
         .expect(200, {
           firstName: mockUser.firstName,
           lastName: mockUser.lastName,
-          email: mockUser.email
+          email: mockUser.email,
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
         },
         function(err) {
           if (err) {

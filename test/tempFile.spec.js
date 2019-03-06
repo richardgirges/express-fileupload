@@ -1,4 +1,5 @@
 const fs = require('fs');
+const md5 = require('md5');
 const path = require('path');
 const request = require('supertest');
 const server = require('./server');
@@ -26,30 +27,35 @@ describe('File Upload Options Tests', function() {
     expectedFileNameOnFileSystem,
     done
   ) {
+
+    let filePath = path.join(fileDir, actualFileNameToUpload);
+    let fileBuffer = fs.readFileSync(filePath);
+    let fileHash = md5(fileBuffer);
+    let fileStat = fs.statSync(filePath);
+    let uploadedFilePath = path.join(uploadDir, expectedFileNameOnFileSystem);
+
     request(
       server.setup(options)
     )
       .post('/upload/single')
-      .attach(
-        'testFile',
-        path.join(
-          fileDir,
-          actualFileNameToUpload
-        )
-      )
-      .expect(200)
+      .attach('testFile', filePath)
+      .expect((res)=>{
+        res.body.uploadDir = '';
+        res.body.uploadPath = '';
+      })
+      .expect(200, {
+        name: expectedFileNameOnFileSystem,
+        md5: fileHash,
+        size: fileStat.size,
+        uploadDir: '',
+        uploadPath: ''
+      })
       .end(function(err) {
         if (err) {
           return done(err);
         }
-        const uploadedFilePath = path.join(
-          uploadDir,
-          expectedFileNameOnFileSystem
-        );
-        fs.stat(
-          uploadedFilePath,
-          done
-        );
+        
+        fs.stat(uploadedFilePath, done);
       });
   }
   describe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
