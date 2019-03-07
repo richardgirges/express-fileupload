@@ -49,11 +49,17 @@ describe('Test of the utilities functions', function() {
   //checkAndMakeDir tests
   describe('Test checkAndMakeDir function', () => {
     //
-    it('checkAndMakeDir returns false if upload options object was not set', () => assert.equal(checkAndMakeDir(), false));
+    it('checkAndMakeDir returns false if upload options object was not set', () => {
+      assert.equal(checkAndMakeDir(), false);
+    });
     //
-    it('checkAndMakeDir returns false if upload option createParentPath was not set', () => assert.equal(checkAndMakeDir({}), false));
+    it('checkAndMakeDir returns false if upload option createParentPath was not set', () => {
+      assert.equal(checkAndMakeDir({}), false);
+    });
     //
-    it('checkAndMakeDir returns false if filePath was not set', () => assert.equal(checkAndMakeDir({createParentPath: true}), false));
+    it('checkAndMakeDir returns false if filePath was not set', () => {
+      assert.equal(checkAndMakeDir({createParentPath: true}), false);
+    });
     //
     it('checkAndMakeDir return true if path to the file already exists', ()=>{
       assert.equal(checkAndMakeDir({createParentPath: true}, path.join(uploadDir, 'testfile')), true);
@@ -112,7 +118,7 @@ describe('Test of the utilities functions', function() {
           return done(err);
         }
         fs.stat(dstPath, (err)=>{
-          if(err){
+          if (err){
             return done(err);
           }
           //Match source and destination files hash.

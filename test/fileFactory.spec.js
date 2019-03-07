@@ -94,7 +94,7 @@ describe('Test of the fileFactory factory', function() {
     });
     it('move the file to the specified folder', function(done) {
       file.mv(path.join(server.uploadDir, 'basketball.png'), function(err) {
-        if(!err){
+        if (!err){
           //Place back moved file
           fs.renameSync(path.join(server.uploadDir, 'basketball.png'), mockFile);          
         }
