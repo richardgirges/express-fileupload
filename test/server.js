@@ -215,6 +215,7 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('Files array is empty');
     }
 
+    let filesUploaded = 0;
     let uploadResults = [];
     for (let i = 0; i < testFiles.length; i++) {
       let uploadPath = path.join(uploadDir, testFiles[i].name);

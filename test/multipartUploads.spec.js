@@ -5,7 +5,6 @@ const md5 = require('md5');
 const path = require('path');
 const request = require('supertest');
 const server = require('./server');
-const app = server.setup();
 const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
@@ -25,14 +24,188 @@ let mockUser = {
 describe('Test Directory Cleaning Method', function() {
   it('emptied "uploads" directory', function(done) {
     clearUploadsDir();
-
     let filesFound = fs.readdirSync(uploadDir).length;
-
     done(filesFound ? `Directory not empty. Found ${filesFound} files.` : null);
   });
 });
 
 describe('Test Single File Upload', function() {
+  const app = server.setup();
+
+  for (let i = 0; i < mockFiles.length; i++) {
+    let fileName = mockFiles[i];
+
+    it(`upload ${fileName} with POST`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single')
+        .attach('testFile', filePath)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end(function(err) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+
+    it(`upload ${fileName} with PUT`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single')
+        .attach('testFile', filePath)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end(function(err) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+  }
+
+  it('fail when no files were attached', function(done) {
+    request(app)
+      .post('/upload/single')
+      .expect(400)
+      .end(done);
+  });
+
+  it('fail when using GET', function(done) {
+    let filePath = path.join(fileDir, mockFiles[0]);
+
+    request(app)
+      .get('/upload/single')
+      .attach('testFile', filePath)
+      .expect(400)
+      .end(done);
+  });
+
+  it('fail when using HEAD', function(done) {
+    let filePath = path.join(fileDir, mockFiles[0]);
+
+    request(app)
+      .head('/upload/single')
+      .attach('testFile', filePath)
+      .expect(400)
+      .end(done);
+  });
+});
+
+describe('Test Single File Upload w/ .mv()', function() {
+  const app = server.setup();
+
+  for (let i = 0; i < mockFiles.length; i++) {
+    let fileName = mockFiles[i];
+
+    it(`upload ${fileName} with POST w/ .mv()`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single')
+        .attach('testFile', filePath)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end(function(err) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+
+    it(`upload ${fileName} with PUT w/ .mv()`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single')
+        .attach('testFile', filePath)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end(function(err) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+  }
+});
+
+describe('Test Single File Upload with useTempFiles option set to true', function() {
+  const app = server.setup({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+  });
+
   for (let i = 0; i < mockFiles.length; i++) {
     let fileName = mockFiles[i];
 
@@ -130,6 +303,8 @@ describe('Test Single File Upload', function() {
 });
 
 describe('Test Single File Upload w/ .mv() Promise', function() {
+  const app = server.setup();
+
   for (let i = 0; i < mockFiles.length; i++) {
     let fileName = mockFiles[i];
 
@@ -226,7 +401,112 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
   });
 });
 
+describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true', function() {
+  const app = server.setup({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+  });
+
+  for (let i = 0; i < mockFiles.length; i++) {
+    let fileName = mockFiles[i];
+
+    it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single/promise')
+        .attach('testFile', filePath)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end(function(err) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+
+    it(`upload ${fileName} with PUT w/ .mv() Promise`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single/promise')
+        .attach('testFile', filePath)
+        .expect((res)=>{
+          res.body.uploadDir = '';
+          res.body.uploadPath = '';
+        })
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end(function(err) {
+          if (err) {
+            return done(err);
+          }
+
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+  }
+
+  it('fail when no files were attached', function(done) {
+    request(app)
+      .post('/upload/single')
+      .expect(400)
+      .end(done);
+  });
+
+  it('fail when using GET', function(done) {
+    let filePath = path.join(fileDir, mockFiles[0]);
+
+    request(app)
+      .get('/upload/single')
+      .attach('testFile', filePath)
+      .expect(400)
+      .end(done);
+  });
+
+  it('fail when using HEAD', function(done) {
+    let filePath = path.join(fileDir, mockFiles[0]);
+
+    request(app)
+      .head('/upload/single')
+      .attach('testFile', filePath)
+      .expect(400)
+      .end(done);
+  });
+});
+
+
 describe('Test Multi-File Upload', function() {
+  const app = server.setup();
+
   it('upload multiple files with POST', function(done) {
     let req = request(app).post('/upload/multiple');
 
@@ -282,6 +562,8 @@ describe('Test Multi-File Upload', function() {
 });
 
 describe('Test File Array Upload', function() {
+  const app = server.setup();
+
   it('upload array of files with POST', function(done) {
     let req = request(app).post('/upload/array');
 
@@ -290,7 +572,7 @@ describe('Test File Array Upload', function() {
     let expectedResult = [];
     let expectedResultSorted = [];
     let uploadedFilesPath = [];
-    mockFiles.forEach((fileName) => {
+    mockFiles.forEach((fileName, index) => {
       let filePath = path.join(fileDir, fileName);
       let fileStat = fs.statSync(filePath);
       uploadedFilesPath.push(path.join(uploadDir, fileName));
@@ -329,6 +611,8 @@ describe('Test File Array Upload', function() {
 });
 
 describe('Test Upload With Fields', function() {
+  const app = server.setup();
+
   for (let i = 0; i < mockFiles.length; i++) {
     let fileName = mockFiles[i];
 
