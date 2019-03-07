@@ -62,11 +62,13 @@ describe('Test of the utilities functions', function() {
     });
     //
     it('checkAndMakeDir return true if path to the file already exists', ()=>{
-      assert.equal(checkAndMakeDir({createParentPath: true}, path.join(uploadDir, 'testfile')), true);
+      let dir = path.join(uploadDir, 'testfile');
+      assert.equal(checkAndMakeDir({createParentPath: true}), dir, true);
     });
     //
     it('checkAndMakeDir creates a dir if path to the file not exists', ()=>{
-      assert.equal(checkAndMakeDir({createParentPath: true}, path.join(uploadDir, 'testfolder', 'testfile')), true);
+      let dir = path.join(uploadDir, 'testfolder', 'testfile');
+      assert.equal(checkAndMakeDir({createParentPath: true}), true);
     });
   });
   //saveBufferToFile tests
