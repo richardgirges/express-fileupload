@@ -5,14 +5,12 @@ const fs = require('fs');
 const md5 = require('md5');
 const path = require('path');
 const fileFactory = require('../lib').fileFactory;
+const {isFunc} = require('../lib/utilities.js');
 const server = require('./server');
 
-const mockBuffer = fs.readFileSync(path.join(server.fileDir, 'basketball.png'));
 
-/**
- * Returns true if argument is function.
- */
-const isFunc = func => (func && func.constructor && func.call && func.apply) ? true : false;
+const mockFile = path.join(server.fileDir, 'basketball.png');
+const mockBuffer = fs.readFileSync(mockFile);
 
 describe('Test of the fileFactory factory', function() {
   beforeEach(function() {
@@ -24,25 +22,6 @@ describe('Test of the fileFactory factory', function() {
       name: 'basketball.png',
       buffer: mockBuffer
     }));
-  });
-
-  describe('File object behavior', function() {
-    const file = fileFactory({
-      name: 'basketball.png',
-      buffer: mockBuffer
-    });
-    it('move the file to the specified folder', function(done) {
-      file.mv(path.join(server.uploadDir, 'basketball.png'), function(err) {
-        assert.ifError(err);
-        done();
-      });
-    });
-    it('reject the mv if the destination does not exists', function(done) {
-      file.mv(path.join(server.uploadDir, 'unknown', 'basketball.png'), function(err) {
-        assert.ok(err);
-        done();
-      });
-    });
   });
 
   describe('Properties', function() {
@@ -85,6 +64,49 @@ describe('Test of the fileFactory factory', function() {
         name: 'basketball.png',
         buffer: mockBuffer
       }).mv), true);
+    });
+  });
+
+  describe('File object behavior for in memory upload', function() {
+    const file = fileFactory({
+      name: 'basketball.png',
+      buffer: mockBuffer
+    });
+    it('move the file to the specified folder', function(done) {
+      file.mv(path.join(server.uploadDir, 'basketball.png'), function(err) {
+        assert.ifError(err);
+        done();
+      });
+    });
+    it('reject the mv if the destination does not exists', function(done) {
+      file.mv(path.join(server.uploadDir, 'unknown', 'basketball.png'), function(err) {
+        assert.ok(err);
+        done();
+      });
+    });
+  });
+
+  describe('File object behavior for upload into temporary file', function() {
+    const file = fileFactory({
+      name: 'basketball.png',
+      buffer: mockBuffer,
+      tempFilePath: mockFile
+    });
+    it('move the file to the specified folder', function(done) {
+      file.mv(path.join(server.uploadDir, 'basketball.png'), function(err) {
+        if (!err){
+          //Place back moved file
+          fs.renameSync(path.join(server.uploadDir, 'basketball.png'), mockFile);          
+        }
+        assert.ifError(err);
+        done();
+      });
+    });
+    it('reject the mv if the destination does not exists', function(done) {
+      file.mv(path.join(server.uploadDir, 'unknown', 'basketball.png'), function(err) {
+        assert.ok(err);
+        done();
+      });
     });
   });
 });

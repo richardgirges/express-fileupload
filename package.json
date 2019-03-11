@@ -1,6 +1,6 @@
 {
   "name": "express-fileupload",
-  "version": "1.1.2-alpha.1",
+  "version": "1.1.3-alpha.1",
   "author": "Richard Girges <richardgirges@gmail.com>",
   "description": "Simple express file upload middleware that wraps around Busboy",
   "main": "./lib/index",
@@ -10,11 +10,10 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "busboy": "^0.2.14",
-    "streamifier": "^0.1.1"
+    "busboy": "^0.2.14"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "keywords": [
     "express",
