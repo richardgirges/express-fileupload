@@ -10,8 +10,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "busboy": "^0.2.14",
-    "streamifier": "^0.1.1"
+    "busboy": "^0.2.14"
   },
   "engines": {
     "node": ">=4.0.0"
