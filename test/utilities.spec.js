@@ -11,6 +11,7 @@ const uploadDir = server.uploadDir;
 const {
   isFunc,
   getTempFilename,
+  buildOptions,
   checkAndMakeDir,
   copyFile,
   saveBufferToFile
@@ -77,6 +78,30 @@ describe('Test of the utilities functions', function() {
 
       assert.equal(errCounter, 0);
     });
+
+  });
+  //buildOptions tests
+  describe('Test buildOptions function', () => {
+
+    const source = { option1: '1', option2: '2' };
+    const sourceAddon = { option3: '3'};
+    const expected = { option1: '1', option2: '2' };
+    const expectedAddon = { option1: '1', option2: '2', option3: '3'};
+
+    it('buildOptions returns and equal object to the object which was paased', () => {
+      let result = buildOptions(source);
+      assert.deepStrictEqual(result, source);
+    });
+
+    it('buildOptions doesnt add non object or null arguments to the result', () => {
+      let result = buildOptions(source, 2, '3', null);
+      assert.deepStrictEqual(result, expected);
+    });
+
+    it('buildOptions adds value to the result from the several source argumets', () => {
+      let result = buildOptions(source, sourceAddon);
+      assert.deepStrictEqual(result, expectedAddon);
+    });    
 
   });
   //checkAndMakeDir tests
