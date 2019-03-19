@@ -10,6 +10,7 @@ const uploadDir = server.uploadDir;
 
 const {
   isFunc,
+  getTempFilename,
   checkAndMakeDir,
   copyFile,
   saveBufferToFile
@@ -45,6 +46,38 @@ describe('Test of the utilities functions', function() {
     it('isFunc returns false if array passed', function() {
       assert.equal(isFunc([]), false);
     });
+  });
+  //getTempFilename tests
+  describe('Test getTempFilename function', () => {
+
+    const nameRegexp = /tmp-\d{1,5}-\d{1,}/;
+
+    it('getTempFilename result matches regexp /tmp-d{1,5}-d{1,}/', () => {
+
+      let errCounter = 0;
+      let tempName = '';
+      for (var i = 0; i < 65537; i++) {
+        tempName = getTempFilename();
+        if (!nameRegexp.test(tempName)) errCounter ++;
+      }
+
+      assert.equal(errCounter, 0);
+    });
+
+    it('getTempFilename current and previous results are not equal', () => {
+
+      let errCounter = 0;
+      let tempName = '';
+      let previousName = '';
+      for (var i = 0; i < 65537; i++) {
+        previousName = tempName;
+        tempName = getTempFilename();
+        if (previousName === tempName) errCounter ++;
+      }
+
+      assert.equal(errCounter, 0);
+    });
+
   });
   //checkAndMakeDir tests
   describe('Test checkAndMakeDir function', () => {
