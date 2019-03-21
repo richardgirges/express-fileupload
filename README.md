@@ -7,9 +7,9 @@ Simple express middleware for uploading files.
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
 # Version 1.1.1 Breaking Changes
-Breaking change to `md5` handling. 
-md5 again returns a hash value instead of function which compute the hash.
-md5 hashes now can be used with tempFiles.
+Breaking change to `md5` handling:
+* `md5` value contains md5 hash instead of a function to compute it.
+* `md5` now can be used with `useTempFiles: true`.
 
 # Version 1.0.0 Breaking Changes
 Breaking change to `md5` handling. [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
