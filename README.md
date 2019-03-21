@@ -7,9 +7,9 @@ Simple express middleware for uploading files.
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
 # Version 1.1.1 Breaking Changes
-Breaking change to `md5` handling. 
-md5 again returns a hash value instead of function which compute the hash.
-md5 hashes now can be used with tempFiles.
+Breaking change to `md5` handling:
+* `md5` value contains md5 hash instead of a function to compute it.
+* `md5` now can be used with `useTempFiles: true`.
 
 # Version 1.0.0 Breaking Changes
 Breaking change to `md5` handling. [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
@@ -79,6 +79,7 @@ createParentPath | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>t
 safeFileNames | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li>regex</li></ul> | Strips characters from the upload's filename. You can use custom regex to determine what to strip. If set to `true`, non-alphanumeric characters _except_ dashes and underscores will be stripped. This option is off by default.<br /><br />**Example #1 (strip slashes from file names):** `app.use(fileUpload({ safeFileNames: /\\/g }))`<br />**Example #2:** `app.use(fileUpload({ safeFileNames: true }))`
 preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li><code>*Number*</code></li></ul> | Preserves filename extension when using <code>safeFileNames</code> option. If set to <code>true</code>, will default to an extension length of 3. If set to <code>*Number*</code>, this will be the max allowable extension length. If an extension is smaller than the extension length, it remains untouched. If the extension is longer, it is shifted.<br /><br />**Example #1 (true):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: true }));</code><br />*myFileName.ext* --> *myFileName.ext*<br /><br />**Example #2 (max extension length 2, extension shifted):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: 2 }));</code><br />*myFileName.ext* --> *myFileNamee.xt*
 abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncate = true</code> to the resulting file structure.
+responseOnLimit | <ul><li><code>'File size limit has been reached'</code>&nbsp;**(default)**</li><li><code>*String*</code></ul> | Response which will be send to client if file size limit exceeded when abortOnLimit set to true.
 useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Will use temporary files at the specified tempDir for managing uploads rather than using buffers in memory. This avoids memory issues when uploading large files.
 tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Used with the <code>useTempFiles</code> option. Path to the directory where temp files will be stored during the upload process. Feel free to add trailing slash, but it is not necessary.
 parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
