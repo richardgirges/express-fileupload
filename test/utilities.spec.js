@@ -9,6 +9,7 @@ const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
 
 const {
+  debugLog,
   isFunc,
   getTempFilename,
   buildOptions,
@@ -26,6 +27,24 @@ const mockHash = md5(mockBuffer);
 describe('Test of the utilities functions', function() {
   beforeEach(function() {
     server.clearUploadsDir();
+  });
+  //debugLog tests
+  describe('Test debugLog function', () => {
+
+    let testMessage = 'Test message';
+
+    it('debugLog returns false if no options passed', () => {
+      assert.equal(debugLog(null, testMessage), false);
+    });
+
+    it('debugLog returns false if option debug is false', () => {
+      assert.equal(debugLog({debug: false}, testMessage), false);
+    });
+
+    it('debugLog returns true if option debug is true', () => {
+      assert.equal(debugLog({debug: true}, testMessage), true);
+    });
+
   });
   //isFunc tests
   describe('Test isFunc function', () => {
