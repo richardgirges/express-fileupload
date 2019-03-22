@@ -122,7 +122,7 @@ describe('Test of the utilities functions', function() {
       });
 
     it(
-      'Strips away all non-alphanumeric chars when enabled for a name which doesnt contain dots characters and preserveExtension: true.',
+      'Strips away all non-alphanumeric chars when enabled and preserveExtension: true for a name without dot characters',
       () => {
         const opts = {safeFileNames: true, preserveExtension: true};
         const name = 'my$Invalid#fileName';
