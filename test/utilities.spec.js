@@ -122,7 +122,7 @@ describe('Test of the utilities functions', function() {
       });
 
     it(
-      'Strips away all non-alphanumeric characters when enabled for a name which doesnt contain dots characters and preserveExtension: true.',
+      'Strips away all non-alphanumeric chars when enabled for a name which doesnt contain dots characters and preserveExtension: true.',
       () => {
         const opts = {safeFileNames: true, preserveExtension: true};
         const name = 'my$Invalid#fileName';
@@ -140,14 +140,14 @@ describe('Test of the utilities functions', function() {
     });
 
     it(
-      'Returns correct filename if name contains several dot characters and preserveExtension: true.',
+      'Returns correct filename if name contains dots characters and preserveExtension: true.',
       () => {
-      const opts = {safeFileNames: true, preserveExtension: true};
-      const name = 'basket.ball.png';
-      const expected = 'basketball.png';
-      let result = parseFileName(opts, name);
-      assert.equal(result, expected);
-    });
+        const opts = {safeFileNames: true, preserveExtension: true};
+        const name = 'basket.ball.png';
+        const expected = 'basketball.png';
+        let result = parseFileName(opts, name);
+        assert.equal(result, expected);
+      });
 
   });
   //buildOptions tests
