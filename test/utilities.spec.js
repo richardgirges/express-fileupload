@@ -111,23 +111,25 @@ describe('Test of the utilities functions', function() {
       assert.equal(result, expected);
     });
 
-    it('Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.', () => {
-      const opts = {safeFileNames: true};
-      const name = 'my$Invalid#fileName.png123';
-      const expected = 'myInvalidfileNamepng123';
-      let result = parseFileName(opts, name);
-      assert.equal(result, expected);
-    });
+    it(
+      'Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.',
+      () => {
+        const opts = {safeFileNames: true};
+        const name = 'my$Invalid#fileName.png123';
+        const expected = 'myInvalidfileNamepng123';
+        let result = parseFileName(opts, name);
+        assert.equal(result, expected);
+      });
 
     it(
-    'Strips away all non-alphanumeric characters when enabled for a name which doesnt contain dots characters and preserveExtension: true.',
-    () => {
-      const opts = {safeFileNames: true, preserveExtension: true};
-      const name = 'my$Invalid#fileName';
-      const expected = 'myInvalidfileName';
-      let result = parseFileName(opts, name);
-      assert.equal(result, expected);
-    });
+      'Strips away all non-alphanumeric characters when enabled for a name which doesnt contain dots characters and preserveExtension: true.',
+      () => {
+        const opts = {safeFileNames: true, preserveExtension: true};
+        const name = 'my$Invalid#fileName';
+        const expected = 'myInvalidfileName';
+        let result = parseFileName(opts, name);
+        assert.equal(result, expected);
+      });
 
     it('Accepts a regex for stripping (decidedly) "invalid" characters from filename.', () => {
       const opts = {safeFileNames: /[$#]/g};
@@ -137,7 +139,9 @@ describe('Test of the utilities functions', function() {
       assert.equal(result, expected);
     });
 
-    it('Returns correct filename if name contains several dot characters and preserveExtension: true.', () => {
+    it(
+      'Returns correct filename if name contains several dot characters and preserveExtension: true.',
+      () => {
       const opts = {safeFileNames: true, preserveExtension: true};
       const name = 'basket.ball.png';
       const expected = 'basketball.png';
