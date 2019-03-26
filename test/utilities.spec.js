@@ -7,18 +7,18 @@ const md5 = require('md5');
 const server = require('./server');
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
-
 const {
   debugLog,
   isFunc,
+  errorFunc,
   getTempFilename,
   buildOptions,
   checkAndMakeDir,
+  deleteFile,
   copyFile,
   saveBufferToFile,
   parseFileName
-} = require('../lib/utilities.js');
-
+} = require('../lib/utilities');
 
 const mockFile = 'basketball.png';
 const mockBuffer = fs.readFileSync(path.join(fileDir, mockFile));
@@ -67,6 +67,23 @@ describe('Test of the utilities functions', function() {
     it('isFunc returns false if array passed', function() {
       assert.equal(isFunc([]), false);
     });
+  });
+  //errorFunc tests
+  describe('Test errorFunc function', () => {
+
+    const resolve = () => 'success';
+    const reject = () => 'error';
+
+    it('errorFunc returns resolve if reject function has not been passed', () => {
+      let result = errorFunc(resolve);
+      assert.equal(result(), 'success');
+    });
+
+    it('errorFunc returns reject if reject function has been passed', () => {
+      let result = errorFunc(resolve, reject);
+      assert.equal(result(), 'error');
+    });
+
   });
   //getTempFilename tests
   describe('Test getTempFilename function', () => {
@@ -234,6 +251,55 @@ describe('Test of the utilities functions', function() {
     });
   });
 
+  describe('Test deleteFile function', function(){
+    beforeEach(function() {
+      server.clearUploadsDir();
+    });
+
+    it('Failed if nonexistent file passed', function(done){
+      let filePath = path.join(uploadDir, getTempFilename());
+      
+      deleteFile(filePath, function(err){
+        if (err) {
+          return done();
+        }
+      });
+    });
+
+    it('Delete a file', function(done){
+      let srcPath = path.join(fileDir, mockFile);
+      let dstPath = path.join(uploadDir, getTempFilename());
+
+      //copy a file
+      copyFile(srcPath, dstPath, function(err){
+        if (err) {
+          return done(err);
+        }
+        fs.stat(dstPath, (err)=>{
+          if (err){
+            return done(err);
+          }
+          // delete a file
+          deleteFile(dstPath, function(err){
+            if (err) {
+              return done(err);
+            }
+
+            fs.stat(dstPath, (err)=>{
+              if (err){
+                return done();
+              }
+
+              //error if a file still exist
+              done(err);
+            });
+          });
+        });
+      });      
+    });
+
+  });
+  
   describe('Test copyFile function', function(){
     beforeEach(function() {
       server.clearUploadsDir();
