@@ -24,6 +24,15 @@ describe('Test of the fileFactory factory', function() {
     }));
   });
 
+  it('return void if buffer is empty and useTempFiles is false.', function() {
+    assert.equal(fileFactory({
+      name: 'basketball.png',
+      buffer: Buffer.concat([])
+    },{
+      useTempFiles: false
+    }), null);
+  });
+
   describe('Properties', function() {
     it('contains the name property', function() {
       assert.equal(fileFactory({
