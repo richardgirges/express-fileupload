@@ -13,6 +13,7 @@ const {
   errorFunc,
   getTempFilename,
   buildOptions,
+  buildFields,
   checkAndMakeDir,
   deleteFile,
   copyFile,
