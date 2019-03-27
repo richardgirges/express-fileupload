@@ -13,6 +13,7 @@ const {
   errorFunc,
   getTempFilename,
   buildOptions,
+  buildFields,
   checkAndMakeDir,
   deleteFile,
   copyFile,
@@ -189,6 +190,16 @@ describe('Test of the utilities functions', function() {
       let result = buildOptions(source, sourceAddon);
       assert.deepStrictEqual(result, expectedAddon);
     });    
+
+  });
+  //buildFields tests
+  describe('Test buildOptions function', () => {
+  
+    it('buildFields does nothing if null value has been passed', () => {
+      let fields = null;
+      fields = buildFields(fields, 'test', null);
+      assert.equal(fields, null);
+    });
 
   });
   //checkAndMakeDir tests

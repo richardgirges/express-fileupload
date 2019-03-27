@@ -9,16 +9,18 @@ const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
 
-const mockFiles = [
-  'car.png',
-  'tree.png',
-  'basketball.png'
-];
+const mockFiles = ['car.png', 'tree.png', 'basketball.png'];
 
 let mockUser = {
   firstName: 'Joe',
   lastName: 'Schmo',
   email: 'joe@mailinator.com'
+};
+
+// Reset response body.uploadDir/uploadPath for testing.
+const resetBodyUploadData = (res)=>{
+  res.body.uploadDir = '';
+  res.body.uploadPath = '';
 };
 
 describe('Test Directory Cleaning Method', function() {
@@ -47,10 +49,7 @@ describe('Test Single File Upload', function() {
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -79,10 +78,7 @@ describe('Test Single File Upload', function() {
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -146,10 +142,7 @@ describe('Test Single File Upload w/ .mv()', function() {
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -178,10 +171,7 @@ describe('Test Single File Upload w/ .mv()', function() {
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -200,7 +190,7 @@ describe('Test Single File Upload w/ .mv()', function() {
   }
 });
 
-describe('Test Single File Upload with useTempFiles option set to true', function() {
+describe('Test Single File Upload with useTempFiles option.', function() {
   const app = server.setup({
     useTempFiles: true,
     tempFileDir: '/tmp/'
@@ -221,10 +211,7 @@ describe('Test Single File Upload with useTempFiles option set to true', functio
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -232,11 +219,8 @@ describe('Test Single File Upload with useTempFiles option set to true', functio
           uploadDir: '',
           uploadPath: ''
         })
-        .end(function(err) {
-          if (err) {
-            return done(err);
-          }
-
+        .end((err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -253,10 +237,7 @@ describe('Test Single File Upload with useTempFiles option set to true', functio
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -264,11 +245,8 @@ describe('Test Single File Upload with useTempFiles option set to true', functio
           uploadDir: '',
           uploadPath: ''
         })
-        .end(function(err) {
-          if (err) {
-            return done(err);
-          }
-
+        .end((err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -302,6 +280,43 @@ describe('Test Single File Upload with useTempFiles option set to true', functio
   });
 });
 
+describe('Test Single File Upload with useTempFiles option and empty tempFileDir.', function() {
+  const app = server.setup({
+    useTempFiles: true,
+    tempFileDir: ''
+  });
+
+  for (let i = 0; i < mockFiles.length; i++) {
+    let fileName = mockFiles[i];
+
+    it(`upload ${fileName} with POST`, function(done) {
+      let filePath = path.join(fileDir, fileName);
+      let fileBuffer = fs.readFileSync(filePath);
+      let fileHash = md5(fileBuffer);
+      let fileStat = fs.statSync(filePath);
+      let uploadedFilePath = path.join(uploadDir, fileName);
+
+      clearUploadsDir();
+
+      request(app)
+        .post('/upload/single')
+        .attach('testFile', filePath)
+        .expect(resetBodyUploadData)
+        .expect(200, {
+          name: fileName,
+          md5: fileHash,
+          size: fileStat.size,
+          uploadDir: '',
+          uploadPath: ''
+        })
+        .end((err) => {
+          if (err) return done(err);
+          fs.stat(uploadedFilePath, done);
+        });
+    });
+  }
+});
+
 describe('Test Single File Upload w/ .mv() Promise', function() {
   const app = server.setup();
 
@@ -320,10 +335,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -331,11 +343,8 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
           uploadDir: '',
           uploadPath: ''
         })
-        .end(function(err) {
-          if (err) {
-            return done(err);
-          }
-
+        .end((err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -352,10 +361,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -363,11 +369,8 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
           uploadDir: '',
           uploadPath: ''
         })
-        .end(function(err) {
-          if (err) {
-            return done(err);
-          }
-
+        .end((err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -422,10 +425,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -433,11 +433,8 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
           uploadDir: '',
           uploadPath: ''
         })
-        .end(function(err) {
-          if (err) {
-            return done(err);
-          }
-
+        .end((err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -454,10 +451,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           name: fileName,
           md5: fileHash,
@@ -465,11 +459,8 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
           uploadDir: '',
           uploadPath: ''
         })
-        .end(function(err) {
-          if (err) {
-            return done(err);
-          }
-
+        .end((err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -530,7 +521,7 @@ describe('Test Multi-File Upload', function() {
     });
 
     req
-      .expect((res)=>{
+      .expect((res) => {
         res.body.forEach(fileInfo => {
           fileInfo.uploadDir = '';
           fileInfo.uploadPath = '';
@@ -539,21 +530,12 @@ describe('Test Multi-File Upload', function() {
         });
       })
       .expect(200, expectedResultSorted)
-      .end(function(err) {
-        if (err) {
-          return done(err);
-        }
-
-        fs.stat(uploadedFilesPath[0], function(err) {
-          if (err) {
-            return done(err);
-          }
-
+      .end((err) => {
+        if (err) return done(err);
+        fs.stat(uploadedFilesPath[0], (err) => {
+          if (err) return done(err);
           fs.stat(uploadedFilesPath[1], function(err) {
-            if (err) {
-              return done(err);
-            }
-
+            if (err) return done(err);
             fs.stat(uploadedFilesPath[2], done);
           });
         });
@@ -596,15 +578,11 @@ describe('Test File Array Upload', function() {
         });
       })
       .expect(200, expectedResultSorted)
-      .end(function(err) {
-        if (err) {
-          return done(err);
-        }
-
-        uploadedFilesPath.forEach(function(uploadedFilePath){
+      .end((err) => {
+        if (err) return done(err);
+        uploadedFilesPath.forEach((uploadedFilePath) => {
           fs.statSync(uploadedFilePath);
         });
-
         done();
       });
   });
@@ -631,10 +609,7 @@ describe('Test Upload With Fields', function() {
         .field('firstName', mockUser.firstName)
         .field('lastName', mockUser.lastName)
         .field('email', mockUser.email)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           firstName: mockUser.firstName,
           lastName: mockUser.lastName,
@@ -646,10 +621,7 @@ describe('Test Upload With Fields', function() {
           uploadPath: ''
         },
         function(err) {
-          if (err) {
-            return done(err);
-          }
-
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
@@ -670,10 +642,7 @@ describe('Test Upload With Fields', function() {
         .field('firstName', mockUser.firstName)
         .field('lastName', mockUser.lastName)
         .field('email', mockUser.email)
-        .expect((res)=>{
-          res.body.uploadDir = '';
-          res.body.uploadPath = '';
-        })
+        .expect(resetBodyUploadData)
         .expect(200, {
           firstName: mockUser.firstName,
           lastName: mockUser.lastName,
@@ -685,10 +654,7 @@ describe('Test Upload With Fields', function() {
           uploadPath: ''
         },
         function(err) {
-          if (err) {
-            return done(err);
-          }
-
+          if (err) return done(err);
           fs.stat(uploadedFilePath, done);
         });
     });
