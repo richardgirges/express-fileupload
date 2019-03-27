@@ -191,6 +191,16 @@ describe('Test of the utilities functions', function() {
     });    
 
   });
+  //buildFields tests
+  describe('Test buildOptions function', () => {
+  
+    it('buildFields does nothing if null value has been passed', () => {
+      let fields = null;
+      fields = buildFields(fields, 'test', null);
+      assert.equal(fields, null);
+    });
+
+  });
   //checkAndMakeDir tests
   describe('Test checkAndMakeDir function', () => {
     //
