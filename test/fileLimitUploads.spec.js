@@ -47,7 +47,7 @@ describe('Test Single File Upload With File Size Limit', function() {
     before(function() {
       app = server.setup({
         limits: {fileSize: 200 * 1024},     // set 200kb upload limit
-        limitHandler: (req, res, next) => { // set limit handler
+        limitHandler: (req, res) => { // set limit handler
           res.writeHead(500, { Connection: 'close', 'Content-Type': 'application/json'});
           res.end(JSON.stringify({response: 'Limit reached!'}));
           limitHandlerRun = true;
