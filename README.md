@@ -40,7 +40,7 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.name`: "car.jpg"
 * `req.files.foo.mv`: A function to move the file elsewhere on your server
 * `req.files.foo.mimetype`: The mimetype of your file
-* `req.files.foo.data`: A buffer representation of your file
+* `req.files.foo.data`: A buffer representation of your file, returns empty buffer in case useTempFiles option was set to true.
 * `req.files.foo.tempFilePath`: A path to the temporary file in case useTempFiles option was set to true.
 * `req.files.foo.truncated`: A boolean that represents if the file is over the size limit
 * `req.files.foo.size`: Uploaded size in bytes
