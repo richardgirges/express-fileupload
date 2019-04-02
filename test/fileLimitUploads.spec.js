@@ -8,7 +8,7 @@ const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 
 describe('Test Single File Upload With File Size Limit', function() {
-  let app;
+  let app, limitHandlerRun;
 
   beforeEach(function() {
     clearUploadsDir();
@@ -41,6 +41,35 @@ describe('Test Single File Upload With File Size Limit', function() {
         .expect(413)
         .end(done);
     });
+  });
+
+  describe('Run limitHandler on limit reached.', function(){
+    before(function() {
+      app = server.setup({
+        limits: {fileSize: 200 * 1024},     // set 200kb upload limit
+        limitHandler: (req, res) => { // set limit handler
+          res.writeHead(500, { Connection: 'close', 'Content-Type': 'application/json'});
+          res.end(JSON.stringify({response: 'Limit reached!'}));
+          limitHandlerRun = true;
+        }
+      });
+    });
+
+    it(`Run limit handler when uploading 'car.png' (~269kb) with 200kb size limit`, function(done) {
+      let filePath = path.join(fileDir, 'car.png');
+      limitHandlerRun = false;
+
+      request(app)
+        .post('/upload/single/truncated')
+        .attach('testFile', filePath)
+        .expect(500, {response: 'Limit reached!'})
+        .end(function(err){
+          if (err) return done(err);
+          if (!limitHandlerRun) return done('handler did not run');
+          done();
+        });
+    });
+
   });
 
   describe('pass truncated file to the next handler', function() {
