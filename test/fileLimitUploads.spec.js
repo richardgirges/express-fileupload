@@ -8,7 +8,7 @@ const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 
 describe('Test Single File Upload With File Size Limit', function() {
-  let app;
+  let app, limitHandlerRun;
 
   beforeEach(function() {
     clearUploadsDir();
