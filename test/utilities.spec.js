@@ -363,4 +363,28 @@ describe('Test of the utilities functions', function() {
       });
     });
   });
+
+  describe('Test uriDecodeFileName function', function() {
+    const testData = [
+      { enc: 'test%22filename', dec: 'test"filename' },
+      { enc: 'test%60filename', dec: 'test`filename' },
+      { enc: '%3Fx%3Dtest%22filename', dec: '?x=test"filename'}
+    ];
+
+    // Test decoding if uriDecodeFileNames: true.
+    testData.forEach((testName) => {
+      const opts = { uriDecodeFileNames: true };
+      it(`Return ${testName.dec} for input ${testName.enc} if uriDecodeFileNames: true`, () => {
+        assert.equal(uriDecodeFileName(opts, testName.enc), testName.dec);
+      });
+    });
+
+    // Test decoding if uriDecodeFileNames: false.
+    testData.forEach((testName) => {
+      const opts = { uriDecodeFileNames: false };
+      it(`Return ${testName.enc} for input ${testName.enc} if uriDecodeFileNames: false`, () => {
+        assert.equal(uriDecodeFileName(opts, testName.enc), testName.enc);
+      });
+    });
+  });
 });
