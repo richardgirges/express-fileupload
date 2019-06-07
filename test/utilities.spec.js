@@ -226,6 +226,11 @@ describe('Test of the utilities functions', function() {
       let dir = path.join(uploadDir, 'testfolder', 'testfile');
       assert.equal(checkAndMakeDir({createParentPath: true}, dir), true);
     });
+    //
+    it('checkAndMakeDir creates a dir recursively if path to the file not exists', ()=>{
+      let dir = path.join(uploadDir, 'testfolder', 'testsubfolder', 'testfile');
+      assert.equal(checkAndMakeDir({createParentPath: true}, dir), true);
+    });
   });
   //saveBufferToFile tests
   describe('Test saveBufferToFile function', function(){
