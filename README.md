@@ -56,7 +56,10 @@ Pass in Busboy options directly to the express-fileupload middleware. [Check out
 
 ```javascript
 app.use(fileUpload({
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits: {
+    fileSize: 50 * 1024 * 1024, // max file size in bytes
+    files: 10 // max number of files
+  },
 }));
 ```
 
@@ -81,7 +84,8 @@ safeFileNames | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true
 preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li><code>*Number*</code></li></ul> | Preserves filename extension when using <code>safeFileNames</code> option. If set to <code>true</code>, will default to an extension length of 3. If set to <code>*Number*</code>, this will be the max allowable extension length. If an extension is smaller than the extension length, it remains untouched. If the extension is longer, it is shifted.<br /><br />**Example #1 (true):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: true }));</code><br />*myFileName.ext* --> *myFileName.ext*<br /><br />**Example #2 (max extension length 2, extension shifted):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: 2 }));</code><br />*myFileName.ext* --> *myFileNamee.xt*
 abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncate = true</code> to the resulting file structure.
 responseOnLimit | <ul><li><code>'File size limit has been reached'</code>&nbsp;**(default)**</li><li><code>*String*</code></ul> | Response which will be send to client if file size limit exceeded when abortOnLimit set to true.
-limitHandler | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>function(req, res, next)</code></li></ul> | User defined limit handler which will be invoked if the file is bigger than configured limits.
+limitHandler | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>function(req, res, next)</code></li></ul> | User defined limit handler which will be invoked if the file is bigger than the configured `limits.fileSize`.
+numFilesLimitHandler | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>function(req, res, next)</code></li></ul> | User defined handler which will be invoked if the number of files is greater than the configured `limits.files`.
 useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Will use temporary files at the specified tempDir for managing uploads rather than using buffers in memory. This avoids memory issues when uploading large files.
 tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Used with the <code>useTempFiles</code> option. Path to the directory where temp files will be stored during the upload process. Feel free to add trailing slash, but it is not necessary.
 parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
