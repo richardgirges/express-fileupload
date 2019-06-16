@@ -18,7 +18,7 @@ describe('Test Multiple File Upload With Files Limit Handler', function() {
   describe('Run numFilesLimitHandler on limit reached.', function(){
     before(function() {
       app = server.setup({
-        limits: { files: 3 },     // set limit of 2 files
+        limits: { files: 3 }, // set limit of 3 files
         numFilesLimitHandler: (req, res) => { // set limit handler
           res.writeHead(500, { Connection: 'close', 'Content-Type': 'application/json'});
           res.end(JSON.stringify({response: 'Too many files!'}));
