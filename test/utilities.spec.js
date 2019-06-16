@@ -219,18 +219,24 @@ describe('Test of the utilities functions', function() {
     });
     //
     it('checkAndMakeDir return true if path to the file already exists', ()=>{
-      let dir = path.join(uploadDir, 'testfile');
-      assert.equal(checkAndMakeDir({createParentPath: true}, dir), true);
+      const filePath = path.join(uploadDir, 'testfile');
+      assert.equal(checkAndMakeDir({createParentPath: true}, filePath), true);
     });
     //
     it('checkAndMakeDir creates a dir if path to the file not exists', ()=>{
-      let dir = path.join(uploadDir, 'testfolder', 'testfile');
-      assert.equal(checkAndMakeDir({createParentPath: true}, dir), true);
+      const parentDir = path.join(uploadDir, 'testfolder');
+      const filePath = path.join(parentDir, 'testfile');
+      assert.equal(checkAndMakeDir({createParentPath: true}, filePath), true);
+      assert.equal(fs.existsSync(parentDir), true, 'creates parent directory');
+      assert.equal(fs.existsSync(filePath), false, 'does not create file');
     });
     //
     it('checkAndMakeDir creates a dir recursively if path to the file not exists', ()=>{
-      let dir = path.join(uploadDir, 'testfolder', 'testsubfolder', 'testfile');
-      assert.equal(checkAndMakeDir({createParentPath: true}, dir), true);
+      const parentDir = path.join(uploadDir, 'testfolder', 'testsubfolder');
+      const filePath = path.join(parentDir, 'testfile');
+      assert.equal(checkAndMakeDir({createParentPath: true}, filePath), true);
+      assert.equal(fs.existsSync(parentDir), true, 'creates parent directory');
+      assert.equal(fs.existsSync(filePath), false, 'does not create file');
     });
   });
   //saveBufferToFile tests
