@@ -18,7 +18,7 @@ describe('Test Multiple File Upload With Files Limit Handler', function() {
   describe('Run numFilesLimitHandler on limit reached.', function(){
     before(function() {
       app = server.setup({
-        limits: { files: 2 },     // set limit of 2 files
+        limits: { files: 3 },     // set limit of 2 files
         numFilesLimitHandler: (req, res) => { // set limit handler
           res.writeHead(500, { Connection: 'close', 'Content-Type': 'application/json'});
           res.end(JSON.stringify({response: 'Too many files!'}));
@@ -27,12 +27,11 @@ describe('Test Multiple File Upload With Files Limit Handler', function() {
       });
     });
 
-    it('Run files limit handler when too many files', (done) => {
+    it('Runs handler when too many files', (done) => {
       const req = request(app).post('/upload/multiple');
 
-      ['car.png', 'tree.png', 'basketball.png'].forEach((fileName, index) => {
+      ['car.png', 'tree.png', 'basketball.png', 'car.png'].forEach((fileName, index) => {
         let filePath = path.join(fileDir, fileName);
-        uploadedFilesPath.push(path.join(uploadDir, fileName));
         req.attach(`testFile${index+1}`, filePath);
       });
 
@@ -44,12 +43,11 @@ describe('Test Multiple File Upload With Files Limit Handler', function() {
         });
     });
 
-    it('Does not run limit handler when number of files is below limit', (done) => {
+    it('Does not run handler when number of files is below limit', (done) => {
       const req = request(app).post('/upload/multiple');
 
-      ['car.png', 'tree.png'].forEach((fileName, index) => {
+      ['car.png', 'tree.png', 'basketball.png'].forEach((fileName, index) => {
         let filePath = path.join(fileDir, fileName);
-        uploadedFilesPath.push(path.join(uploadDir, fileName));
         req.attach(`testFile${index+1}`, filePath);
       });
 

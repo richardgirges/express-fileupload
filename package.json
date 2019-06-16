@@ -10,7 +10,8 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "busboy": "^0.2.14"
+    "busboy": "^0.2.14",
+    "mkdirp": "^0.5.1"
   },
   "engines": {
     "node": ">=6.0.0"
