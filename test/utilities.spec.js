@@ -18,7 +18,8 @@ const {
   deleteFile,
   copyFile,
   saveBufferToFile,
-  parseFileName
+  parseFileName,
+  uriDecodeFileName
 } = require('../lib/utilities');
 
 const mockFile = 'basketball.png';
