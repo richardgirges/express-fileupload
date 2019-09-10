@@ -23,6 +23,18 @@ const resetBodyUploadData = (res) => {
   res.body.uploadPath = '';
 };
 
+const genUploadResult = (fileName, filePath) => {
+  const fileStat = fs.statSync(filePath);
+  const fileBuffer = fs.readFileSync(filePath);
+  return {
+    name: fileName,
+    md5: md5(fileBuffer),
+    size: fileStat.size,
+    uploadDir: '',
+    uploadPath: ''
+  };
+};
+
 describe('Test Directory Cleaning Method', function() {
   it('emptied "uploads" directory', function(done) {
     clearUploadsDir();
@@ -36,28 +48,16 @@ describe('Test Single File Upload', function() {
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
-    const result = {
-      name: fileName,
-      md5: fileHash,
-      size: fileStat.size,
-      uploadDir: '',
-      uploadPath: ''
-    };
+    const result = genUploadResult(fileName, filePath);
+
     it(`upload ${fileName} with POST`, function(done) {
       clearUploadsDir();
       request(app)
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
 
     it(`upload ${fileName} with PUT`, function(done) {
@@ -66,11 +66,7 @@ describe('Test Single File Upload', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });    
   });
 
@@ -103,17 +99,8 @@ describe('Test Single File Upload w/ .mv()', function() {
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
-    const result = {
-      name: fileName,
-      md5: fileHash,
-      size: fileStat.size,
-      uploadDir: '',
-      uploadPath: ''
-    };
+    const result = genUploadResult(fileName, filePath);
 
     it(`upload ${fileName} with POST w/ .mv()`, function(done) {
       clearUploadsDir();
@@ -121,11 +108,7 @@ describe('Test Single File Upload w/ .mv()', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
 
     it(`upload ${fileName} with PUT w/ .mv()`, function(done) {
@@ -134,11 +117,7 @@ describe('Test Single File Upload w/ .mv()', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
   });
 });
@@ -148,17 +127,8 @@ describe('Test Single File Upload with useTempFiles option.', function() {
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
-    const result = {
-      name: fileName,
-      md5: fileHash,
-      size: fileStat.size,
-      uploadDir: '',
-      uploadPath: ''
-    };
+    const result = genUploadResult(fileName, filePath);
     
     it(`upload ${fileName} with POST`, function(done) {
       clearUploadsDir();
@@ -166,11 +136,7 @@ describe('Test Single File Upload with useTempFiles option.', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
 
     it(`upload ${fileName} with PUT`, function(done) {
@@ -179,11 +145,7 @@ describe('Test Single File Upload with useTempFiles option.', function() {
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });    
   });
 
@@ -216,10 +178,8 @@ describe('Test Single File Upload with useTempFiles option and empty tempFileDir
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
+    const result = genUploadResult(fileName, filePath);
 
     it(`upload ${fileName} with POST`, function(done) {
       clearUploadsDir();
@@ -227,17 +187,7 @@ describe('Test Single File Upload with useTempFiles option and empty tempFileDir
         .post('/upload/single')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, {
-          name: fileName,
-          md5: fileHash,
-          size: fileStat.size,
-          uploadDir: '',
-          uploadPath: ''
-        })
-        .end((err) => {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });    
   });
 });
@@ -247,28 +197,16 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
-    const result = {
-      name: fileName,
-      md5: fileHash,
-      size: fileStat.size,
-      uploadDir: '',
-      uploadPath: ''
-    };
+    const result = genUploadResult(fileName, filePath);
+    
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       clearUploadsDir();
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
 
     it(`upload ${fileName} with PUT w/ .mv() Promise`, function(done) {
@@ -277,11 +215,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
         .post('/upload/single/promise')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end(function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });    
   });
 
@@ -314,28 +248,16 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
-    const result = {
-      name: fileName,
-      md5: fileHash,
-      size: fileStat.size,
-      uploadDir: '',
-      uploadPath: ''
-    };
+    const result = genUploadResult(fileName, filePath);
+    
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       clearUploadsDir();
       request(app)
         .post('/upload/single/promise')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end((err) => {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
 
     it(`upload ${fileName} with PUT w/ .mv() Promise`, function(done) {
@@ -344,11 +266,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
         .post('/upload/single/promise')
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
-        .expect(200, result)
-        .end((err) => {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });    
   });
 
@@ -469,21 +387,12 @@ describe('Test Upload With Fields', function() {
   const app = server.setup();
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileHash = md5(fileBuffer);
-    const fileStat = fs.statSync(filePath);
     const uploadedFilePath = path.join(uploadDir, fileName);
     // Expected results
-    const result = {
-      firstName: mockUser.firstName,
-      lastName: mockUser.lastName,
-      email: mockUser.email,
-      name: fileName,
-      md5: fileHash,
-      size: fileStat.size,
-      uploadDir: '',
-      uploadPath: ''
-    };
+    const result = genUploadResult(fileName, filePath);
+    result.firstName = mockUser.firstName;
+    result.lastName = mockUser.lastName;
+    result.email = mockUser.email;
 
     it(`upload ${fileName} and submit fields at the same time with POST`, function(done) {
       clearUploadsDir();
@@ -494,10 +403,7 @@ describe('Test Upload With Fields', function() {
         .field('lastName', mockUser.lastName)
         .field('email', mockUser.email)
         .expect(resetBodyUploadData)
-        .expect(200, result, function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });
 
     it(`upload ${fileName} and submit fields at the same time with PUT`, function(done) {
@@ -509,10 +415,7 @@ describe('Test Upload With Fields', function() {
         .field('lastName', mockUser.lastName)
         .field('email', mockUser.email)
         .expect(resetBodyUploadData)
-        .expect(200, result, function(err) {
-          if (err) return done(err);
-          fs.stat(uploadedFilePath, done);
-        });
+        .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
     });    
   });
 });
