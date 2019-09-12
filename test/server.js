@@ -1,79 +1,73 @@
 'use strict';
 
-const path = require('path');
-const fileDir = path.join(__dirname, 'files');
-const uploadDir = path.join(__dirname, 'uploads');
 const fs = require('fs');
+const path = require('path');
 const rimraf = require('rimraf');
 
-const clearUploadsDir = function() {
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-  } else {
-    rimraf.sync(uploadDir);
-    fs.mkdirSync(uploadDir);
-  }
+const fileDir = path.join(__dirname, 'files');
+const tempDir = path.join(__dirname, 'temp');
+const uploadDir = path.join(__dirname, 'uploads');
+
+const clearDir = (dir) => {
+  if (fs.existsSync(dir)) rimraf.sync(dir);
+  fs.mkdirSync(dir, { recursive: true });
 };
 
-const setup = function(fileUploadOptions) {
+const clearUploadsDir = () => clearDir(uploadDir);
+const clearTempDir = () => clearDir(tempDir);
+
+const getUploadedFileData = (file) => ({
+  md5: file.md5,
+  name: file.name,
+  size: file.size,
+  uploadPath: path.join(uploadDir, file.name),
+  uploadDir: uploadDir
+});
+
+const setup = (fileUploadOptions) => {
   const express = require('express');
   const expressFileupload = require('../lib/index');
 
   const app = express();
 
-  fileUploadOptions = fileUploadOptions || {};
-  app.use(expressFileupload(fileUploadOptions));
+  app.use(expressFileupload(fileUploadOptions || {}));
 
-  app.all('/upload/single', function(req, res) {
+  app.all('/upload/single', (req, res) => {
     if (!req.files) {
       return res.status(400).send('No files were uploaded.');
     }
 
-    let testFile = req.files.testFile;
-    let uploadPath = path.join(uploadDir, testFile.name);
+    const testFile = req.files.testFile;
+    const fileData = getUploadedFileData(testFile);
 
-    testFile.mv(uploadPath, function(err) {
+    testFile.mv(fileData.uploadPath, function(err) {
       if (err) {
         console.log('ERR', err); // eslint-disable-line
         return res.status(500).send(err);
       }
-
-      //res.send('File uploaded to ' + uploadPath);
-      res.json({
-        name: testFile.name,
-        uploadDir: uploadDir,
-        uploadPath: uploadPath,
-        md5: testFile.md5,
-        size: testFile.size
-      });
+      res.json(fileData);
     });
   });
 
-  app.all('/upload/single/promise', function(req, res) {
+  app.all('/upload/single/promise', (req, res) => {
     if (!req.files) {
       return res.status(400).send('No files were uploaded.');
     }
 
-    let testFile = req.files.testFile;
-    let uploadPath = path.join(uploadDir, testFile.name);
+    const testFile = req.files.testFile;
+    const fileData = getUploadedFileData(testFile);
 
     testFile
-      .mv(uploadPath)
+      .mv(fileData.uploadPath)
       .then(() => {
-        res.json({
-          name: testFile.name,
-          uploadDir: uploadDir,
-          uploadPath: uploadPath,
-          md5: testFile.md5,
-          size: testFile.size
-        });
+        res.json(fileData);
       })
       .catch(err => {
         res.status(500).send(err);
       });
   });
 
-  app.all('/upload/single/withfields', function(req, res) {
+  app.all('/upload/single/withfields', (req, res) => {
     if (!req.files) {
       return res.status(400).send('No files were uploaded.');
     }
@@ -81,51 +75,35 @@ const setup = function(fileUploadOptions) {
     if (!req.body) {
       return res.status(400).send('No request body found');
     }
-
-    if (!req.body.firstName || !req.body.firstName.trim()) {
-      return res.status(400).send('Invalid first name');
+    
+    const fields = ['firstName', 'lastName', 'email'];
+    for (let i = 0; i < fields.length; i += 1) {
+      if (!req.body[fields[i]] || !req.body[fields[i]].trim()) {
+        return res.status(400).send(`Invalid field: ${fields[i]}`);
+      }
     }
 
-    if (!req.body.lastName || !req.body.lastName.trim()) {
-      return res.status(400).send('Invalid last name');
-    }
+    const testFile = req.files.testFile;
+    const fileData = getUploadedFileData(testFile);
+    fields.forEach((field) => { fileData[field] = req.body[field]; });
 
-    if (!req.body.email || !req.body.email.trim()) {
-      return res.status(400).send('Invalid email');
-    }
-
-    let testFile = req.files.testFile;
-    let uploadPath = path.join(uploadDir, testFile.name);
-
-    testFile.mv(uploadPath, function(err) {
+    testFile.mv(fileData.uploadPath, (err) => {
       if (err) {
         return res.status(500).send(err);
       }
-
-      res.json({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        name: testFile.name,
-        uploadDir: uploadDir,
-        uploadPath: uploadPath,
-        md5: testFile.md5,
-        size: testFile.size
-      });
+      res.json(fileData);
     });
   });
 
-  app.all('/upload/single/truncated', function(req, res) {
+  app.all('/upload/single/truncated', (req, res) => {
     if (!req.files) {
       return res.status(400).send('No files were uploaded.');
     }
 
-    if (req.files.testFile.truncated) {
-      // status 400 to differentiate from ending the request in the on limit
-      return res.status(400).send(`File too big`);
-    }
-
-    return res.status(200).send('Upload succeed');
+    // status 400 to differentiate from ending the request in the on limit
+    return req.files.testFile.truncated
+      ? res.status(400).send(`File too big`)
+      : res.status(200).send('Upload succeed');
   });
 
   app.all('/upload/multiple', function(req, res) {
@@ -133,64 +111,33 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('No files were uploaded.');
     }
 
-    let testFile1 = req.files.testFile1;
-    let testFile2 = req.files.testFile2;
-    let testFile3 = req.files.testFile3;
-    let uploadPath1 = path.join(uploadDir, testFile1.name);
-    let uploadPath2 = path.join(uploadDir, testFile2.name);
-    let uploadPath3 = path.join(uploadDir, testFile3.name);
-
-    if (!testFile1) {
-      return res.status(400).send('testFile1 was not uploaded');
+    const fileNames = ['testFile1', 'testFile2', 'testFile3'];
+    
+    const testFiles = fileNames.map(file => req.files[file]);
+    for (let i = 0; i < testFiles.length; i += 1) {
+      if (!testFiles[i]) {
+        return res.status(400).send(`${fileNames[i]} was not uploaded!`);
+      }
     }
+    
+    const filesData = testFiles.map(file => getUploadedFileData(file));
 
-    if (!testFile2) {
-      return res.status(400).send('testFile2 was not uploaded');
-    }
-
-    if (!testFile3) {
-      return res.status(400).send('testFile3 was not uploaded');
-    }
-
-    testFile1.mv(uploadPath1, function(err) {
+    testFiles[0].mv(filesData[0].uploadPath, (err) => {
       if (err) {
         return res.status(500).send(err);
       }
 
-      testFile2.mv(uploadPath2, function(err) {
+      testFiles[1].mv(filesData[1].uploadPath, (err) => {
         if (err) {
           return res.status(500).send(err);
         }
 
-        testFile3.mv(uploadPath3, function(err) {
+        testFiles[2].mv(filesData[2].uploadPath, (err) => {
           if (err) {
             return res.status(500).send(err);
           }
 
-          //res.send('Files uploaded to ' + uploadDir);
-          res.json([
-            {
-              name: testFile1.name,
-              uploadDir: uploadDir,
-              uploadPath: uploadPath1,
-              md5: testFile1.md5,
-              size: testFile1.size
-            },
-            {
-              name: testFile2.name,
-              uploadDir: uploadDir,
-              uploadPath: uploadPath2,
-              md5: testFile2.md5,
-              size: testFile2.size
-            },
-            {
-              name: testFile2.name,
-              uploadDir: uploadDir,
-              uploadPath: uploadPath2,
-              md5: testFile2.md5,
-              size: testFile2.size
-            }
-          ]);
+          res.json(filesData);
         });
       });
     });
@@ -201,7 +148,7 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('No files were uploaded.');
     }
 
-    let testFiles = req.files.testFiles;
+    const testFiles = req.files.testFiles;
 
     if (!testFiles) {
       return res.status(400).send('No files were uploaded');
@@ -215,25 +162,19 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('Files array is empty');
     }
 
-    let uploadResults = [];
-    for (let i = 0; i < testFiles.length; i++) {
-      let uploadPath = path.join(uploadDir, testFiles[i].name);
+    const filesData = testFiles.map(file => getUploadedFileData(file));
 
-      testFiles[i].mv(uploadPath, function(err) {
+    let uploadCount = 0;
+    for (let i = 0; i < testFiles.length; i += 1) {
+
+      testFiles[i].mv(filesData[i].uploadPath, (err) => {
         if (err) {
           return res.status(500).send(err);
         }
 
-        uploadResults.push({
-          name: testFiles[i].name,
-          uploadDir: uploadDir,
-          uploadPath: uploadPath,
-          md5: testFiles[i].md5,
-          size: testFiles[i].size
-        });
-
-        if (uploadResults.length === testFiles.length) {
-          res.json(uploadResults);
+        uploadCount += 1;
+        if (uploadCount === testFiles.length) {
+          res.json(filesData);
         }
       });
     }
@@ -244,16 +185,11 @@ const setup = function(fileUploadOptions) {
       return res.status(400).send('No request body found');
     }
 
-    if (!req.body.firstName || !req.body.firstName.trim()) {
-      return res.status(400).send('Invalid first name');
-    }
-
-    if (!req.body.lastName || !req.body.lastName.trim()) {
-      return res.status(400).send('Invalid last name');
-    }
-
-    if (!req.body.email || !req.body.email.trim()) {
-      return res.status(400).send('Invalid email');
+    const fields = ['firstName', 'lastName', 'email'];
+    for (let i = 0; i < fields.length; i += 1) {
+      if (!req.body[fields[i]] || !req.body[fields[i]].trim()) {
+        return res.status(400).send(`Invalid field: ${fields[i]}`);
+      }
     }
 
     res.json({
@@ -328,6 +264,8 @@ const setup = function(fileUploadOptions) {
 module.exports = {
   setup,
   fileDir,
+  tempDir,
   uploadDir,
+  clearTempDir,
   clearUploadsDir
 };
