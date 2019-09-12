@@ -5,13 +5,15 @@ const md5 = require('md5');
 const path = require('path');
 const request = require('supertest');
 const server = require('./server');
-const clearUploadsDir = server.clearUploadsDir;
+
 const fileDir = server.fileDir;
+const tempDir = server.tempDir;
 const uploadDir = server.uploadDir;
+const clearUploadsDir = server.clearUploadsDir;
 
 const mockFiles = ['car.png', 'tree.png', 'basketball.png'];
 
-let mockUser = {
+const mockUser = {
   firstName: 'Joe',
   lastName: 'Schmo',
   email: 'joe@mailinator.com'
@@ -123,7 +125,7 @@ describe('Test Single File Upload w/ .mv()', function() {
 });
 
 describe('Test Single File Upload with useTempFiles option.', function() {
-  const app = server.setup({ useTempFiles: true, tempFileDir: '/tmp/' });
+  const app = server.setup({ useTempFiles: true, tempFileDir: tempDir });
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
@@ -244,7 +246,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
 });
 
 describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true', function() {
-  const app = server.setup({ useTempFiles: true, tempFileDir: '/tmp/' });
+  const app = server.setup({ useTempFiles: true, tempFileDir: tempDir });
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
