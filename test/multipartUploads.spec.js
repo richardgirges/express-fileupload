@@ -421,3 +421,44 @@ describe('Test Upload With Fields', function() {
     });    
   });
 });
+
+describe('Test Aborting/Canceling during upload', function() {
+  this.timeout(4000); // Set timeout for async tests.
+  const uploadTimeout = 1000;
+
+  const app = server.setup({
+    useTempFiles: true,
+    tempFileDir: tempDir,
+    debug: true,
+    uploadTimeout
+  });
+
+  clearTempDir();
+  clearUploadsDir();
+  mockFiles.forEach((fileName) => {
+    const filePath = path.join(fileDir, fileName);
+
+    it(`Delete temp file if ${fileName} upload was aborted`, (done) => {
+      const req = request(app)
+        .post('/upload/single')
+        .attach('testFile', filePath)
+        .on('progress', (e) => {
+          const progress = (e.loaded * 100) / e.total;
+          // Aborting request, use req.req since it is original superagent request.
+          if (progress > 50) req.req.abort();
+        })
+        .end((err) => {
+          if (!err) return done(`Connection hasn't been aborted!`);
+          if (err.code !== 'ECONNRESET') return done(err);
+          // err.code === 'ECONNRESET' that means upload has been aborted.
+          // Checking temp directory after upload timeout.
+          setTimeout(() => {
+            fs.readdir(tempDir, (err, files) => {
+              if (err) return done(err);
+              return files.length ? done(`Temporary directory contains files!`) : done();
+            });
+          }, uploadTimeout * 2);
+        });
+    });
+  });
+});
