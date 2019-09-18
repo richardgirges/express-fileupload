@@ -9,6 +9,7 @@ const server = require('./server');
 const fileDir = server.fileDir;
 const tempDir = server.tempDir;
 const uploadDir = server.uploadDir;
+const clearTempDir = server.clearTempDir;
 const clearUploadsDir = server.clearUploadsDir;
 
 const mockFiles = ['car.png', 'tree.png', 'basketball.png'];
@@ -272,14 +273,14 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
     });    
   });
 
-  it('fail when no files were attached', function(done) {
+  it('fail when no files were attached', (done) => {
     request(app)
       .post('/upload/single')
       .expect(400)
       .end(done);
   });
 
-  it('fail when using GET', function(done) {
+  it('fail when using GET', (done) => {
     request(app)
       .get('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
@@ -287,7 +288,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
       .end(done);
   });
 
-  it('fail when using HEAD', function(done) {
+  it('fail when using HEAD', (done) => {
     request(app)
       .head('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
@@ -299,32 +300,25 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
 describe('Test Multi-File Upload', function() {
   const app = server.setup();
 
-  it('upload multiple files with POST', function(done) {
+  it('upload multiple files with POST', (done) => {
     clearUploadsDir();
     const req = request(app).post('/upload/multiple');
-    let expectedResult = [];
-    let expectedResultSorted = [];
-    let uploadedFilesPath = [];
+    const expectedResult = [];
+    const expectedResultSorted = [];
+    const uploadedFilesPath = [];
     mockFiles.forEach((fileName, index) => {
-      let filePath = path.join(fileDir, fileName);
-      let fileStat = fs.statSync(filePath);
+      const filePath = path.join(fileDir, fileName);
+      req.attach(`testFile${index + 1}`, filePath);
       uploadedFilesPath.push(path.join(uploadDir, fileName));
-      expectedResult.push({
-        name: fileName,
-        md5: md5(fs.readFileSync(filePath)),
-        size: fileStat.size,
-        uploadDir: '',
-        uploadPath: ''
-      });
-      req.attach(`testFile${index+1}`, filePath);
+      expectedResult.push(genUploadResult(fileName, filePath));
     });
 
     req
       .expect((res) => {
-        res.body.forEach(fileInfo => {
+        res.body.forEach((fileInfo) => {
           fileInfo.uploadDir = '';
           fileInfo.uploadPath = '';
-          let index = mockFiles.indexOf(fileInfo.name);
+          const index = mockFiles.indexOf(fileInfo.name);
           expectedResultSorted.push(expectedResult[index]);
         });
       })
@@ -333,7 +327,7 @@ describe('Test Multi-File Upload', function() {
         if (err) return done(err);
         fs.stat(uploadedFilesPath[0], (err) => {
           if (err) return done(err);
-          fs.stat(uploadedFilesPath[1], function(err) {
+          fs.stat(uploadedFilesPath[1], (err) => {
             if (err) return done(err);
             fs.stat(uploadedFilesPath[2], done);
           });
@@ -345,32 +339,25 @@ describe('Test Multi-File Upload', function() {
 describe('Test File Array Upload', function() {
   const app = server.setup();
 
-  it('upload array of files with POST', function(done) {
+  it('upload array of files with POST', (done) => {
     clearUploadsDir();
     const req = request(app).post('/upload/array');
-    let expectedResult = [];
-    let expectedResultSorted = [];
-    let uploadedFilesPath = [];
+    const expectedResult = [];
+    const expectedResultSorted = [];
+    const uploadedFilesPath = [];
     mockFiles.forEach((fileName) => {
-      let filePath = path.join(fileDir, fileName);
-      let fileStat = fs.statSync(filePath);
+      const filePath = path.join(fileDir, fileName);
       uploadedFilesPath.push(path.join(uploadDir, fileName));
-      expectedResult.push({
-        name:fileName,
-        md5: md5(fs.readFileSync(filePath)),
-        size: fileStat.size,
-        uploadDir: '',
-        uploadPath: ''
-      });
+      expectedResult.push(genUploadResult(fileName, filePath));
       req.attach('testFiles', filePath);
     });
 
     req
       .expect((res)=>{
-        res.body.forEach(fileInfo => {
+        res.body.forEach((fileInfo) => {
           fileInfo.uploadDir = '';
           fileInfo.uploadPath = '';
-          let index = mockFiles.indexOf(fileInfo.name);
+          const index = mockFiles.indexOf(fileInfo.name);
           expectedResultSorted.push(expectedResult[index]);
         });
       })
