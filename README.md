@@ -68,6 +68,32 @@ app.use(fileUpload({
     tempFileDir : '/tmp/'
 }));
 ```
+### Using debug option
+
+You can set `debug` option to `true` to see some logging about upload process.
+In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
+
+It will show you whether the request is illigable and also common events triggered during upload.
+That can be really usfull for troubleshhoting and ***we recommend to attach debug output to each issue on Github***.
+
+***Output example:***
+
+```
+Express-file-upload: Temporary file path is /node/express-fileupload/test/temp/tmp-16-1570084843942
+Express-file-upload: New upload started testFile->car.png, bytes:0
+Express-file-upload: Uploading testFile->car.png, bytes:21232...
+Express-file-upload: Uploading testFile->car.png, bytes:86768...
+Express-file-upload: Upload timeout testFile->car.png, bytes:86768
+Express-file-upload: Cleaning up temporary file /node/express-fileupload/test/temp/tmp-16-1570084843942...
+```
+
+***Description:***
+
+* `Temporary file path is...` says that `useTempfiles` was set to true and also shows you temp file name and path.
+* `New upload started testFile->car.png` says that new upload started with field `testFile` and file name `car.png`.
+* `Uploading testFile->car.png, bytes:21232...` shows current progress for each new data chunk.
+* `Upload timeout` means that no data came during `uploadTimeout`.
+* `Cleaning up temporary file` Here finaly we see cleaning up of the temporary file because of upload timeout reached.
 
 ### Available Options
 Pass in non-Busboy options directly to the middleware. These are express-fileupload specific options.
