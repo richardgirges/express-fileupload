@@ -6,14 +6,6 @@ Simple express middleware for uploading files.
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
-# Version 1.1.1 Breaking Changes
-Breaking change to `md5` handling:
-* `md5` value contains md5 hash instead of a function to compute it.
-* `md5` now can be used with `useTempFiles: true`.
-
-# Version 1.0.0 Breaking Changes
-Breaking change to `md5` handling. [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
-
 # Install
 ```bash
 # With NPM
@@ -45,6 +37,13 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.truncated`: A boolean that represents if the file is over the size limit
 * `req.files.foo.size`: Uploaded size in bytes
 * `req.files.foo.md5`: MD5 checksum of the uploaded file
+
+**Notes about braking changes with md5 handling:**
+
+* Before 1.0.0 `md5` is a MD5 checksum of the uploaded file.
+* In 1.0.0 and till 1.1.1 `md5` value is a function to compute md5 hash[Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1).
+* From 1.1.1 it was reverted back to MD5 checksum value and also added full md5 support in case of using temporary files.
+
 
 ### Examples
 * [Example Project](https://github.com/richardgirges/express-fileupload/tree/master/example)
