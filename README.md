@@ -41,7 +41,7 @@ The **req.files.foo** object will contain the following:
 **Notes about braking changes with md5 handling:**
 
 * Before 1.0.0 `md5` is a MD5 checksum of the uploaded file.
-* In 1.0.0 and till 1.1.1 `md5` value is a function to compute md5 hash[Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1).
+* In 1.0.0 and till 1.1.1 `md5` value is a function to compute md5 hash [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
 * From 1.1.1 it was reverted back to MD5 checksum value and also added full md5 support in case of using temporary files.
 
 
