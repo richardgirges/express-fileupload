@@ -130,7 +130,7 @@ describe('Test of the utilities functions', function() {
       assert.equal(result, expected);
     });
 
-    it('Cuts of file name length if it more then 255 chars.' () => {
+    it('Cuts of file name length if it more then 255 chars.', () => {
       const name = 'a'.repeat(300);
       const result = parseFileName({}, name);
       assert.equal(result.length, 255);
