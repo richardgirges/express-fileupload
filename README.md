@@ -62,6 +62,10 @@ app.use(fileUpload({
 ### Using useTempFile Options
 Use temp files instead of memory for managing the upload process.
 
+```
+ Note that this option available for versions 1.0.0 and newer. 
+```
+
 ```javascript
 app.use(fileUpload({
     useTempFiles : true,
