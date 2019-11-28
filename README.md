@@ -9,7 +9,7 @@ Simple express middleware for uploading files.
 # Install
 ```bash
 # With NPM
-npm install --save express-fileupload
+npm i express-fileupload
 
 # With Yarn
 yarn add express-fileupload
@@ -38,11 +38,11 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.size`: Uploaded size in bytes
 * `req.files.foo.md5`: MD5 checksum of the uploaded file
 
-**Notes about braking changes with md5 handling:**
+**Notes about breaking changes with MD5 handling:**
 
-* Before 1.0.0 `md5` is a MD5 checksum of the uploaded file.
-* In 1.0.0 and till 1.1.1 `md5` value is a function to compute md5 hash [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
-* From 1.1.1 it was reverted back to MD5 checksum value and also added full md5 support in case of using temporary files.
+* Before 1.0.0, `md5` is an MD5 checksum of the uploaded file.
+* From 1.0.0 until 1.1.1, `md5` is a function to compute an MD5 hash (Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)).
+* From 1.1.1 onward, `md5` is reverted back to MD5 checksum value and also added full MD5 support in case you are using temporary files.
 
 
 ### Examples
@@ -51,7 +51,7 @@ The **req.files.foo** object will contain the following:
 * [Multi-File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#multi-file-upload)
 
 ### Using Busboy Options
-Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here.](https://github.com/mscdex/busboy#api)
+Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here](https://github.com/mscdex/busboy#api).
 
 ```javascript
 app.use(fileUpload({
@@ -62,22 +62,20 @@ app.use(fileUpload({
 ### Using useTempFile Options
 Use temp files instead of memory for managing the upload process.
 
-```
- Note that this option available for versions 1.0.0 and newer. 
-```
-
 ```javascript
+// Note that this option available for versions 1.0.0 and newer. 
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
 ```
+
 ### Using debug option
 
 You can set `debug` option to `true` to see some logging about upload process.
 In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
 
-It will show you whether the request is illigable and also common events triggered during upload.
+It will show you whether the request is invalid and also common events triggered during upload.
 That can be really usfull for troubleshhoting and ***we recommend to attach debug output to each issue on Github***.
 
 ***Output example:***
