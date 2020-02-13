@@ -10,7 +10,8 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "busboy": "^0.3.1"
+    "busboy": "^0.3.1",
+    "md5": "^2.2.1"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -28,7 +29,6 @@
   "license": "MIT",
   "repository": "richardgirges/express-fileupload",
   "devDependencies": {
-    "md5": "^2.2.1",
     "body-parser": "^1.18.3",
     "coveralls": "^3.0.2",
     "eslint": "^5.9.0",
