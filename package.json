@@ -10,8 +10,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "busboy": "^0.3.1",
-    "md5": "^2.2.1"
+    "busboy": "^0.3.1"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -34,6 +33,7 @@
     "eslint": "^6.8.0",
     "express": "^4.17.1",
     "istanbul": "^0.4.5",
+    "md5": "^2.2.1",
     "mocha": "^7.0.1",
     "rimraf": "^3.0.2",
     "supertest": "^4.0.2"
