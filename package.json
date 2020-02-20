@@ -28,14 +28,14 @@
   "license": "MIT",
   "repository": "richardgirges/express-fileupload",
   "devDependencies": {
-    "md5": "^2.2.1",
-    "body-parser": "^1.18.3",
-    "coveralls": "^3.0.2",
-    "eslint": "^5.9.0",
-    "express": "^4.16.3",
+    "body-parser": "^1.19.0",
+    "coveralls": "^3.0.9",
+    "eslint": "^6.8.0",
+    "express": "^4.17.1",
     "istanbul": "^0.4.5",
-    "mocha": "^5.2.0",
-    "rimraf": "^2.6.2",
-    "supertest": "^3.3.0"
+    "md5": "^2.2.1",
+    "mocha": "^7.0.1",
+    "rimraf": "^3.0.2",
+    "supertest": "^4.0.2"
   }
 }

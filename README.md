@@ -30,7 +30,7 @@ app.post('/upload', function(req, res) {
 
 The **req.files.foo** object will contain the following:
 * `req.files.foo.name`: "car.jpg"
-* `req.files.foo.mv`: A function to move the file elsewhere on your server
+* `req.files.foo.mv`: A function to move the file elsewhere on your server. Can take a callback or return a promise.
 * `req.files.foo.mimetype`: The mimetype of your file
 * `req.files.foo.data`: A buffer representation of your file, returns empty buffer in case useTempFiles option was set to true.
 * `req.files.foo.tempFilePath`: A path to the temporary file in case useTempFiles option was set to true.
