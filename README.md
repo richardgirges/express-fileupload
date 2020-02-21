@@ -9,7 +9,7 @@ Simple express middleware for uploading files.
 # Install
 ```bash
 # With NPM
-npm install --save express-fileupload
+npm i express-fileupload
 
 # With Yarn
 yarn add express-fileupload
@@ -30,7 +30,7 @@ app.post('/upload', function(req, res) {
 
 The **req.files.foo** object will contain the following:
 * `req.files.foo.name`: "car.jpg"
-* `req.files.foo.mv`: A function to move the file elsewhere on your server
+* `req.files.foo.mv`: A function to move the file elsewhere on your server. Can take a callback or return a promise.
 * `req.files.foo.mimetype`: The mimetype of your file
 * `req.files.foo.data`: A buffer representation of your file, returns empty buffer in case useTempFiles option was set to true.
 * `req.files.foo.tempFilePath`: A path to the temporary file in case useTempFiles option was set to true.
@@ -38,11 +38,11 @@ The **req.files.foo** object will contain the following:
 * `req.files.foo.size`: Uploaded size in bytes
 * `req.files.foo.md5`: MD5 checksum of the uploaded file
 
-**Notes about braking changes with md5 handling:**
+**Notes about breaking changes with MD5 handling:**
 
-* Before 1.0.0 `md5` is a MD5 checksum of the uploaded file.
-* In 1.0.0 and till 1.1.1 `md5` value is a function to compute md5 hash [Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)
-* From 1.1.1 it was reverted back to MD5 checksum value and also added full md5 support in case of using temporary files.
+* Before 1.0.0, `md5` is an MD5 checksum of the uploaded file.
+* From 1.0.0 until 1.1.1, `md5` is a function to compute an MD5 hash ([Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)).
+* From 1.1.1 onward, `md5` is reverted back to MD5 checksum value and also added full MD5 support in case you are using temporary files.
 
 
 ### Examples
@@ -51,7 +51,7 @@ The **req.files.foo** object will contain the following:
 * [Multi-File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#multi-file-upload)
 
 ### Using Busboy Options
-Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here.](https://github.com/mscdex/busboy#api)
+Pass in Busboy options directly to the express-fileupload middleware. [Check out the Busboy documentation here](https://github.com/mscdex/busboy#api).
 
 ```javascript
 app.use(fileUpload({
@@ -62,22 +62,20 @@ app.use(fileUpload({
 ### Using useTempFile Options
 Use temp files instead of memory for managing the upload process.
 
-```
- Note that this option available for versions 1.0.0 and newer. 
-```
-
 ```javascript
+// Note that this option available for versions 1.0.0 and newer. 
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
 ```
+
 ### Using debug option
 
 You can set `debug` option to `true` to see some logging about upload process.
 In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
 
-It will show you whether the request is illigable and also common events triggered during upload.
+It will show you whether the request is invalid and also common events triggered during upload.
 That can be really usfull for troubleshhoting and ***we recommend to attach debug output to each issue on Github***.
 
 ***Output example:***
@@ -111,8 +109,8 @@ preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>
 abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncated = true</code> to the resulting file structure.
 responseOnLimit | <ul><li><code>'File size limit has been reached'</code>&nbsp;**(default)**</li><li><code>*String*</code></ul> | Response which will be send to client if file size limit exceeded when abortOnLimit set to true.
 limitHandler | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>function(req, res, next)</code></li></ul> | User defined limit handler which will be invoked if the file is bigger than configured limits.
-useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Will use temporary files at the specified tempDir for managing uploads rather than using buffers in memory. This avoids memory issues when uploading large files.
-tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Used with the <code>useTempFiles</code> option. Path to the directory where temp files will be stored during the upload process. Feel free to add trailing slash, but it is not necessary.
+useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | By default this module uploads files into RAM. Setting this option to True turns on using temporary files instead of utilising RAM. This avoids memory overflow issues when uploading large files or in case of uploading lots of files at same time.
+tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Path to store temporary files.<br />Used along with the <code>useTempFiles</code> option. By default this module uses 'tmp' folder in the current working directory.<br />You can use trailing slash, but it is not necessary.
 parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
 debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Turn on/off upload process logging. Can be usefull for troubleshooting.
 

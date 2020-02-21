@@ -1,22 +1,22 @@
 'use strict';
 
 const assert = require('assert');
-const processNested = require('../lib').processNested;
+const processNested = require('../lib/processNested');
 
 describe('Test Convert Flatten object to Nested object', function() {
-  it('With no nested data', function(){
+  it('With no nested data', () => {
     const data = {
         'firstname': 'John',
         'lastname': 'Doe',
         'age': 22
       },
-      excerpt= { firstname: 'John', lastname: 'Doe', age: 22 },
+      excerpt = { firstname: 'John', lastname: 'Doe', age: 22 },
       processed = processNested(data);
 
     assert.deepEqual(processed, excerpt);
   });
 
-  it('With nested data', function(){
+  it('With nested data', () => {
     const data = {
         'firstname': 'John',
         'lastname': 'Doe',
