@@ -174,6 +174,12 @@ describe('Test of the utilities functions', function() {
         assert.equal(result, expected);
       });
 
+    it('Returns a temporary file name if name argument is empty.', () => {
+      const opts = {safeFileNames: false};
+      const result = parseFileName(opts);
+      assert.equal(typeof result, 'string');
+    });
+
   });
   //buildOptions tests
   describe('Test buildOptions function', () => {
