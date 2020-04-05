@@ -2,7 +2,7 @@
 Simple express middleware for uploading files.
 
 [![npm](https://img.shields.io/npm/v/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
-[![Build Status](https://travis-ci.org/richardgirges/express-fileupload.svg?branch=master)](https://travis-ci.org/richardgirges/express-fileupload)
+[![Build Status](https://travis-ci.com/richardgirges/express-fileupload.svg?branch=master)](https://travis-ci.com/richardgirges/express-fileupload)
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
