@@ -76,7 +76,7 @@ You can set `debug` option to `true` to see some logging about upload process.
 In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
 
 It will show you whether the request is invalid and also common events triggered during upload.
-That can be really usfull for troubleshhoting and ***we recommend to attach debug output to each issue on Github***.
+That can be really useful for troubleshooting and ***we recommend attaching debug output to each issue on Github***.
 
 ***Output example:***
 
