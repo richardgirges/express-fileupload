@@ -40,7 +40,7 @@ const setup = (fileUploadOptions) => {
     const testFile = req.files.testFile;
     const fileData = getUploadedFileData(testFile);
 
-    testFile.mv(fileData.uploadPath, function(err) {
+    testFile.mv(fileData.uploadPath, (err) => {
       if (err) {
         console.log('ERR', err); // eslint-disable-line
         return res.status(500).send(err);

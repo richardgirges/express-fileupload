@@ -12,7 +12,7 @@ const uploadDir = server.uploadDir;
 const clearTempDir = server.clearTempDir;
 const clearUploadsDir = server.clearUploadsDir;
 
-const mockFiles = ['car.png', 'tree.png', 'basketball.png'];
+const mockFiles = ['car.png', 'tree.png', 'basketball.png', 'emptyfile.txt'];
 
 const mockUser = {
   firstName: 'Joe',

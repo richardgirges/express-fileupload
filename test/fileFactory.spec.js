@@ -26,14 +26,6 @@ describe('Test of the fileFactory factory', function() {
   beforeEach(() => server.clearUploadsDir());
 
   it('return a file object', () => assert.ok(fileFactory(mockFileOpts)));
-  it('return void if buffer is empty and useTempFiles is false.', () => {
-    assert.equal(fileFactory({
-      name: mockFileName,
-      buffer: Buffer.concat([])
-    }, {
-      useTempFiles: false
-    }), null);
-  });
 
   describe('Properties', function() {
     it('contains the name property', () => {
