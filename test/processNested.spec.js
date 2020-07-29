@@ -45,4 +45,13 @@ describe('Test Convert Flatten object to Nested object', function() {
 
     assert.deepEqual(processed, excerpt);
   });
+
+  it('Do not allow prototype pollution', () => {
+    const pollutionOb = JSON.parse(`{"__proto__.POLLUTED": "FOOBAR"}`);
+
+    processNested(pollutionOb);
+
+    // eslint-disable-next-line no-undef
+    assert.equal(global.POLLUTED, undefined);
+  });
 });
