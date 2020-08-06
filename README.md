@@ -6,6 +6,9 @@ Simple express middleware for uploading files.
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
+# Security Notice
+Please install version 1.1.10+ of this package to avoid a security vulnerability in Node/EJS related to JS prototype pollution. This vulnerability is only applicable if you have the `parseNested` option set to `true` (it is `false` by default).
+
 # Install
 ```bash
 # With NPM
