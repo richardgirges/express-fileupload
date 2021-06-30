@@ -43,7 +43,7 @@ jobs:
           echo "ATM CodeQL CLI config file contents:"
           cat ${CODEQL_CONFIG_FILE}
           echo "name: \"ATM CodeQL config\"" > .github/codeql/codeql-config.yml
-          echo "disable-default-queries: true" >> .github/codeql/codeql-config.yml
+          echo "disable-default-queries: false" >> .github/codeql/codeql-config.yml
           echo "queries:" >> .github/codeql/codeql-config.yml
           echo "  - uses: ./${atm_qlpack_path}/codeql-suites/javascript-atm-code-scanning.qls" >> .github/codeql/codeql-config.yml
           echo "ATM Code Scanning config file contents:"
