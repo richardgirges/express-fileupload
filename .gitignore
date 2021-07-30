@@ -13,6 +13,7 @@ node_modules
 *.gz
 
 coverage
+.nyc_output
 test/uploads
 example/uploads/*
 !example/uploads/placeholder.txt
