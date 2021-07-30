@@ -2,9 +2,12 @@
 Simple express middleware for uploading files.
 
 [![npm](https://img.shields.io/npm/v/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
-[![Build Status](https://travis-ci.org/richardgirges/express-fileupload.svg?branch=master)](https://travis-ci.org/richardgirges/express-fileupload)
+[![Build Status](https://travis-ci.com/richardgirges/express-fileupload.svg?branch=master)](https://travis-ci.com/richardgirges/express-fileupload)
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
+
+# Security Notice
+Please install version 1.1.10+ of this package to avoid a security vulnerability in Node/EJS related to JS prototype pollution. This vulnerability is only applicable if you have the `parseNested` option set to `true` (it is `false` by default).
 
 # Install
 ```bash
@@ -76,7 +79,7 @@ You can set `debug` option to `true` to see some logging about upload process.
 In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
 
 It will show you whether the request is invalid and also common events triggered during upload.
-That can be really usfull for troubleshhoting and ***we recommend to attach debug output to each issue on Github***.
+That can be really useful for troubleshooting and ***we recommend attaching debug output to each issue on Github***.
 
 ***Output example:***
 
@@ -112,10 +115,11 @@ limitHandler | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>funct
 useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | By default this module uploads files into RAM. Setting this option to True turns on using temporary files instead of utilising RAM. This avoids memory overflow issues when uploading large files or in case of uploading lots of files at same time.
 tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Path to store temporary files.<br />Used along with the <code>useTempFiles</code> option. By default this module uses 'tmp' folder in the current working directory.<br />You can use trailing slash, but it is not necessary.
 parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
-debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Turn on/off upload process logging. Can be usefull for troubleshooting.
+debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Turn on/off upload process logging. Can be useful for troubleshooting.
+uploadTimeout | <ul><li><code>60000</code>&nbsp;**(default)**</li><li><code>Integer</code></ul> | This defines how long to wait for data before aborting. Set to 0 if you want to turn off timeout checks.
 
 # Help Wanted
-Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcomed! 
+Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcome! 
 
 # Thanks & Credit
 [Brian White](https://github.com/mscdex) for his stellar work on the [Busboy Package](https://github.com/mscdex/busboy) and the [connect-busboy Package](https://github.com/mscdex/connect-busboy)

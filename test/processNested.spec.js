@@ -45,4 +45,15 @@ describe('Test Convert Flatten object to Nested object', function() {
 
     assert.deepEqual(processed, excerpt);
   });
+
+  it('Do not allow prototype pollution', () => {
+    const pollutionOb1 = JSON.parse(`{"__proto__.POLLUTED1": "FOOBAR"}`);
+    const pollutionOb2 = JSON.parse(`{"constructor.prototype.POLLUTED2": "FOOBAR"}`);
+
+    processNested(pollutionOb1);
+    processNested(pollutionOb2);
+
+    assert.equal(global.POLLUTED1, undefined);
+    assert.equal(global.POLLUTED2, undefined);
+  });
 });
