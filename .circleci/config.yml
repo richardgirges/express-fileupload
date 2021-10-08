@@ -19,7 +19,7 @@ workflows:
           version: '10.24.1'
           pkg-manager: npm
       - node/test:
-          version: '11.15.0'
+          version: '11.14.0'
           pkg-manager: npm
       - node/test:
           version: '12.22.6'
