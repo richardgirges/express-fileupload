@@ -1,0 +1,34 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.7
+jobs:
+  lintandcoverage:
+    docker:
+      - image: cimg/node:16
+    steps:
+      - checkout
+      - run: node run lint
+      - run: node test
+      - run: node run coveralls
+workflows:
+  test:
+    jobs:
+      - lintandcoverage
+      - node/test:
+          version: '10'
+          pkg-manager: npm
+      - node/test:
+          version: '11'
+          pkg-manager: npm
+      - node/test:
+          version: '12'
+          pkg-manager: npm
+      - node/test:
+          version: '13'
+          pkg-manager: npm
+      - node/test:
+          version: '14'
+          pkg-manager: npm
+      - node/test:
+          version: '15'
+          pkg-manager: npm
