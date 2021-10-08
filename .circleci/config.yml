@@ -7,9 +7,9 @@ jobs:
       - image: cimg/node:16.10.0
     steps:
       - checkout
-      - run: node run lint
-      - run: node test
-      - run: node run coveralls
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run coveralls
 workflows:
   test:
     jobs:
