@@ -135,7 +135,7 @@ describe('Test of the utilities functions', function() {
       const result = parseFileName({}, name);
       assert.equal(result.length, 255);
     });
-    
+
     it(
       'Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.',
       () => {
@@ -202,12 +202,12 @@ describe('Test of the utilities functions', function() {
     it('buildOptions adds value to the result from the several source argumets', () => {
       let result = buildOptions(source, sourceAddon);
       assert.deepStrictEqual(result, expectedAddon);
-    });    
+    });
 
   });
   //buildFields tests
   describe('Test buildOptions function', () => {
-  
+
     it('buildFields does nothing if null value has been passed', () => {
       let fields = null;
       fields = buildFields(fields, 'test', null);
@@ -287,7 +287,7 @@ describe('Test of the utilities functions', function() {
 
     it('Failed if nonexistent file passed', function(done){
       let filePath = path.join(uploadDir, getTempFilename());
-      
+
       deleteFile(filePath, function(err){
         if (err) {
           return done();
@@ -324,11 +324,11 @@ describe('Test of the utilities functions', function() {
             });
           });
         });
-      });      
+      });
     });
 
   });
-  
+
   describe('Test copyFile function', function(){
     beforeEach(function() {
       server.clearUploadsDir();
@@ -337,7 +337,7 @@ describe('Test of the utilities functions', function() {
     it('Copy a file and check a hash', function(done) {
       let srcPath = path.join(fileDir, mockFile);
       let dstPath = path.join(uploadDir, mockFile);
-      
+
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done(err);
@@ -357,7 +357,7 @@ describe('Test of the utilities functions', function() {
     it('Failed if wrong source file path passed', function(done){
       let srcPath = path.join(fileDir, 'unknown');
       let dstPath = path.join(uploadDir, mockFile);
-      
+
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done();
@@ -368,7 +368,7 @@ describe('Test of the utilities functions', function() {
     it('Failed if wrong destination file path passed', function(done){
       let srcPath = path.join(fileDir, 'unknown');
       let dstPath = path.join('unknown', 'unknown');
-      
+
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done();
@@ -400,4 +400,32 @@ describe('Test of the utilities functions', function() {
       });
     });
   });
+
+  describe('Test for no prototype pollution in buildFields', function() {
+    const prototypeFields = [
+      { name: '__proto__', data: {} },
+      { name: 'constructor', data: {} },
+      { name: 'toString', data: {} }
+    ];
+
+    let fieldObject = undefined;
+    prototypeFields.forEach((field) => {
+      fieldObject = buildFields(fieldObject, field.name, field.data);
+    });
+
+    it(`Has ${prototypeFields.length} keys`, () => {
+      assert.equal(Object.keys(fieldObject).length, prototypeFields.length);
+    });
+
+    it(`Has null as its prototype`, () => {
+      assert.equal(Object.getPrototypeOf(fieldObject), null);
+    });
+
+    prototypeFields.forEach((field) => {
+      it(`${field.name} property is not an array`, () => {
+        // Note, Array.isArray is an insufficient test due to it returning false for Objects with an array prototype.
+        assert.equal(fieldObject[field.name] instanceof Array, false);
+      });
+    });
+  })
 });
