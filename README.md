@@ -6,8 +6,13 @@ Simple express middleware for uploading files.
 [![CircleCI](https://circleci.com/gh/richardgirges/express-fileupload/tree/master.svg?style=svg)](https://circleci.com/gh/richardgirges/express-fileupload/tree/master)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
-# Security Notice
-Please install version 1.1.10+ of this package to avoid a security vulnerability in Node/EJS related to JS prototype pollution. This vulnerability is only applicable if you have the `parseNested` option set to `true` (it is `false` by default).
+# Help us Improve express-fileupload
+This package is still very much supported and maintained. But the more help the better. If you're interested any of the following:
+* Ticket and PR triage
+* Feature scoping and implementation
+* Maintenance (upgrading packages, fixing security vulnerabilities, etc)
+
+...please contact richardgirges '-at-' gmail.com if you're interested
 
 # Install
 ```bash
