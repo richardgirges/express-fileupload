@@ -19,7 +19,8 @@ const {
   copyFile,
   saveBufferToFile,
   parseFileName,
-  uriDecodeFileName
+  uriDecodeFileName,
+  isSafeFromPollution
 } = require('../lib/utilities');
 
 const mockFile = 'basketball.png';
@@ -135,7 +136,7 @@ describe('Test of the utilities functions', function() {
       const result = parseFileName({}, name);
       assert.equal(result.length, 255);
     });
-    
+
     it(
       'Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.',
       () => {
@@ -202,12 +203,12 @@ describe('Test of the utilities functions', function() {
     it('buildOptions adds value to the result from the several source argumets', () => {
       let result = buildOptions(source, sourceAddon);
       assert.deepStrictEqual(result, expectedAddon);
-    });    
+    });
 
   });
   //buildFields tests
   describe('Test buildOptions function', () => {
-  
+
     it('buildFields does nothing if null value has been passed', () => {
       let fields = null;
       fields = buildFields(fields, 'test', null);
@@ -287,7 +288,7 @@ describe('Test of the utilities functions', function() {
 
     it('Failed if nonexistent file passed', function(done){
       let filePath = path.join(uploadDir, getTempFilename());
-      
+
       deleteFile(filePath, function(err){
         if (err) {
           return done();
@@ -324,11 +325,11 @@ describe('Test of the utilities functions', function() {
             });
           });
         });
-      });      
+      });
     });
 
   });
-  
+
   describe('Test copyFile function', function(){
     beforeEach(function() {
       server.clearUploadsDir();
@@ -337,7 +338,7 @@ describe('Test of the utilities functions', function() {
     it('Copy a file and check a hash', function(done) {
       let srcPath = path.join(fileDir, mockFile);
       let dstPath = path.join(uploadDir, mockFile);
-      
+
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done(err);
@@ -357,7 +358,7 @@ describe('Test of the utilities functions', function() {
     it('Failed if wrong source file path passed', function(done){
       let srcPath = path.join(fileDir, 'unknown');
       let dstPath = path.join(uploadDir, mockFile);
-      
+
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done();
@@ -368,7 +369,7 @@ describe('Test of the utilities functions', function() {
     it('Failed if wrong destination file path passed', function(done){
       let srcPath = path.join(fileDir, 'unknown');
       let dstPath = path.join('unknown', 'unknown');
-      
+
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done();
@@ -397,6 +398,70 @@ describe('Test of the utilities functions', function() {
       const opts = { uriDecodeFileNames: false };
       it(`Return ${testName.enc} for input ${testName.enc} if uriDecodeFileNames: false`, () => {
         assert.equal(uriDecodeFileName(opts, testName.enc), testName.enc);
+      });
+    });
+  });
+
+  describe('Test for no prototype pollution in buildFields', function() {
+    const prototypeFields = [
+      { name: '__proto__', data: {} },
+      { name: 'constructor', data: {} },
+      { name: 'toString', data: {} }
+    ];
+
+    const nonPrototypeFields = [
+      { name: 'a', data: {} },
+      { name: 'b', data: {} }
+    ];
+
+    let fieldObject = undefined;
+    [...prototypeFields, ...nonPrototypeFields].forEach((field) => {
+      fieldObject = buildFields(fieldObject, field.name, field.data);
+    });
+
+    it(`Has ${nonPrototypeFields.length} keys`, () => {
+      assert.equal(Object.keys(fieldObject).length, nonPrototypeFields.length);
+    });
+
+    it(`Has null as its prototype`, () => {
+      assert.equal(Object.getPrototypeOf(fieldObject), null);
+    });
+
+    prototypeFields.forEach((field) => {
+      it(`${field.name} property is not an array`, () => {
+        // Note, Array.isArray is an insufficient test due to it returning false
+        // for Objects with an array prototype.
+        assert.equal(fieldObject[field.name] instanceof Array, false);
+      });
+    });
+  });
+
+  describe('Test for correct detection of prototype pollution', function() {
+    const validInsertions = [
+      { base: {}, key: 'a' },
+      { base: { a: 1 }, key: 'a' },
+      { base: { __proto__: { a: 1 } }, key: 'a' },
+      { base: [1], key: 0 },
+      { base: { __proto__: [1] }, key: 0 }
+    ];
+
+    const invalidInsertions = [
+      { base: {}, key: '__proto__' },
+      { base: {}, key: 'constructor' },
+      { base: [1], key: '__proto__' },
+      { base: [1], key: 'length' },
+      { base: { __proto__: [1] }, key: 'length' }
+    ];
+
+    validInsertions.forEach((insertion) => {
+      it(`Key ${insertion.key} should be valid for ${JSON.stringify(insertion.base)}`, () => {
+        assert.equal(isSafeFromPollution(insertion.base, insertion.key), true);
+      });
+    });
+
+    invalidInsertions.forEach((insertion) => {
+      it(`Key ${insertion.key} should not be valid for ${JSON.stringify(insertion.base)}`, () => {
+        assert.equal(isSafeFromPollution(insertion.base, insertion.key), false);
       });
     });
   });
