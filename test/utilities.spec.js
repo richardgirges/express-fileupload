@@ -19,7 +19,8 @@ const {
   copyFile,
   saveBufferToFile,
   parseFileName,
-  uriDecodeFileName
+  uriDecodeFileName,
+  isSafeFromPollution
 } = require('../lib/utilities');
 
 const mockFile = 'basketball.png';
@@ -408,13 +409,18 @@ describe('Test of the utilities functions', function() {
       { name: 'toString', data: {} }
     ];
 
+    const nonPrototypeFields = [
+      { name: 'a', data: {} },
+      { name: 'b', data: {} }
+    ];
+
     let fieldObject = undefined;
-    prototypeFields.forEach((field) => {
+    [...prototypeFields, ...nonPrototypeFields].forEach((field) => {
       fieldObject = buildFields(fieldObject, field.name, field.data);
     });
 
-    it(`Has ${prototypeFields.length} keys`, () => {
-      assert.equal(Object.keys(fieldObject).length, prototypeFields.length);
+    it(`Has ${nonPrototypeFields.length} keys`, () => {
+      assert.equal(Object.keys(fieldObject).length, nonPrototypeFields.length);
     });
 
     it(`Has null as its prototype`, () => {
@@ -423,9 +429,40 @@ describe('Test of the utilities functions', function() {
 
     prototypeFields.forEach((field) => {
       it(`${field.name} property is not an array`, () => {
-        // Note, Array.isArray is an insufficient test due to it returning false for Objects with an array prototype.
+        // Note, Array.isArray is an insufficient test due to it returning false
+        // for Objects with an array prototype.
         assert.equal(fieldObject[field.name] instanceof Array, false);
       });
     });
-  })
+  });
+
+  describe('Test for correct detection of prototype pollution', function() {
+    const validInsertions = [
+      { base: {}, key: 'a' },
+      { base: { a: 1 }, key: 'a' },
+      { base: { __proto__: { a: 1 } }, key: 'a' },
+      { base: [1], key: 0 },
+      { base: { __proto__: [1] }, key: 0 }
+    ];
+
+    const invalidInsertions = [
+      { base: {}, key: '__proto__' },
+      { base: {}, key: 'constructor' },
+      { base: [1], key: '__proto__' },
+      { base: [1], key: 'length' },
+      { base: { __proto__: [1] }, key: 'length' }
+    ];
+
+    validInsertions.forEach((insertion) => {
+      it(`Key ${insertion.key} should be valid for ${JSON.stringify(insertion.base)}`, () => {
+        assert.equal(isSafeFromPollution(insertion.base, insertion.key), true);
+      });
+    });
+
+    invalidInsertions.forEach((insertion) => {
+      it(`Key ${insertion.key} should not be valid for ${JSON.stringify(insertion.base)}`, () => {
+        assert.equal(isSafeFromPollution(insertion.base, insertion.key), false);
+      });
+    });
+  });
 });
