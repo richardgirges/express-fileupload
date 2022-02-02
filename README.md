@@ -12,7 +12,7 @@ This package is still very much supported and maintained. But the more help the 
 * Feature scoping and implementation
 * Maintenance (upgrading packages, fixing security vulnerabilities, etc)
 
-...please contact richardgirges '-at-' gmail.com if you're interested
+...please contact richardgirges '-at-' gmail.com
 
 # Install
 ```bash
