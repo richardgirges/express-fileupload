@@ -3,6 +3,7 @@ Simple express middleware for uploading files.
 
 [![npm](https://img.shields.io/npm/v/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
 [![downloads per month](http://img.shields.io/npm/dm/express-fileupload.svg)](https://www.npmjs.org/package/express-fileupload)
+[![CircleCI](https://circleci.com/gh/richardgirges/express-fileupload/tree/master.svg?style=svg)](https://circleci.com/gh/richardgirges/express-fileupload/tree/master)
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
 # Security Notice
