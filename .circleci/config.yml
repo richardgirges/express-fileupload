@@ -4,7 +4,7 @@ orbs:
 jobs:
   lintandcoverage:
     docker:
-      - image: cimg/node:16.10.0
+      - image: cimg/node:16.13.2
     steps:
       - checkout
       - run: npm install
@@ -16,20 +16,17 @@ workflows:
     jobs:
       - lintandcoverage
       - node/test:
-          version: '10.24.1'
-          pkg-manager: npm
-      - node/test:
-          version: '11.14.0'
-          pkg-manager: npm
-      - node/test:
           version: '12.22.6'
           pkg-manager: npm
       - node/test:
-          version: '13.14.0'
-          pkg-manager: npm
-      - node/test:
-          version: '14.18.0'
+          version: '14.19.0'
           pkg-manager: npm
       - node/test:
           version: '15.14.0'
+          pkg-manager: npm
+      - node/test:
+          version: '16.13.2'
+          pkg-manager: npm
+      - node/test:
+          version: '17.4.0'
           pkg-manager: npm
