@@ -29,12 +29,11 @@
   "license": "MIT",
   "repository": "richardgirges/express-fileupload",
   "devDependencies": {
-    "body-parser": "^1.19.0",
     "coveralls": "^3.1.1",
     "eslint": "^7.31.0",
-    "express": "^4.17.1",
+    "express": "^4.18.1",
     "md5": "^2.3.0",
-    "mocha": "^9.2.0",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "supertest": "^4.0.2"
