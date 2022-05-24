@@ -18,15 +18,35 @@ workflows:
       - node/test:
           version: '12.22.6'
           pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
       - node/test:
           version: '14.19.0'
           pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
       - node/test:
           version: '15.14.0'
           pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
       - node/test:
           version: '16.13.2'
           pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
       - node/test:
           version: '17.4.0'
           pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
