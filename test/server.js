@@ -9,8 +9,12 @@ const tempDir = path.join(__dirname, 'temp');
 const uploadDir = path.join(__dirname, 'uploads');
 
 const clearDir = (dir) => {
-  if (fs.existsSync(dir)) rimraf.sync(dir);
-  fs.mkdirSync(dir, { recursive: true });
+  try {
+    if (fs.existsSync(dir)) rimraf.sync(dir);
+    fs.mkdirSync(dir, { recursive: true });
+  } catch (err) {
+    // 
+  }
 };
 
 const clearUploadsDir = () => clearDir(uploadDir);
