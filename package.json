@@ -8,6 +8,7 @@
     "test": "nyc  --reporter=html --reporter=text mocha -- -R spec",
     "lint": "eslint ./",
     "lint:fix": "eslint --fix ./",
+    "coverage": "nyc report",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {

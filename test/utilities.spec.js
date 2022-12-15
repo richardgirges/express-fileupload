@@ -382,7 +382,10 @@ describe('Test of the utilities functions', function() {
     const testData = [
       { enc: 'test%22filename', dec: 'test"filename' },
       { enc: 'test%60filename', dec: 'test`filename' },
-      { enc: '%3Fx%3Dtest%22filename', dec: '?x=test"filename'}
+      { enc: '%3Fx%3Dtest%22filename', dec: '?x=test"filename'},
+      { enc: '�filename�', dec: 'filename'},
+      { enc: 'bug_bounty_upload_%91and%92.txt', dec: 'bug_bounty_upload_and.txt'},
+      { enc: 'bug_bounty_upload_‘and’.txt', dec: 'bug_bounty_upload_‘and’.txt'}
     ];
 
     // Test decoding if uriDecodeFileNames: true.

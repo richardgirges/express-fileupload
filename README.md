@@ -124,7 +124,17 @@ debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code><
 uploadTimeout | <ul><li><code>60000</code>&nbsp;**(default)**</li><li><code>Integer</code></ul> | This defines how long to wait for data before aborting. Set to 0 if you want to turn off timeout checks.
 
 # Help Wanted
-Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcome! 
+Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. 
+
+Pull Requests are welcome !
+
+Code quality gate (tested via [CircleCI](./.circleci)) :
+- nodeJS version compatibility : 12..17 (cf. circleCi)
+- code lint : `npm run lint` and `npm run lint:fix`
+- green tests : `npm run test`
+- tests coverage : `npm run coverage`
+
+
 
 # Thanks & Credit
 [Brian White](https://github.com/mscdex) for his stellar work on the [Busboy Package](https://github.com/mscdex/busboy) and the [connect-busboy Package](https://github.com/mscdex/connect-busboy)
