@@ -79,7 +79,7 @@ const setup = (fileUploadOptions) => {
     if (!req.body) {
       return res.status(400).send('No request body found');
     }
-    
+
     const fields = ['firstName', 'lastName', 'email'];
     for (let i = 0; i < fields.length; i += 1) {
       if (!req.body[fields[i]] || !req.body[fields[i]].trim()) {
@@ -116,14 +116,14 @@ const setup = (fileUploadOptions) => {
     }
 
     const fileNames = ['testFile1', 'testFile2', 'testFile3'];
-    
+
     const testFiles = fileNames.map(file => req.files[file]);
     for (let i = 0; i < testFiles.length; i += 1) {
       if (!testFiles[i]) {
         return res.status(400).send(`${fileNames[i]} was not uploaded!`);
       }
     }
-    
+
     const filesData = testFiles.map(file => getUploadedFileData(file));
 
     testFiles[0].mv(filesData[0].uploadPath, (err) => {

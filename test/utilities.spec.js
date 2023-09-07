@@ -207,7 +207,7 @@ describe('Test of the utilities functions', function() {
 
   });
   //buildFields tests
-  describe('Test buildOptions function', () => {
+  describe('Test buildFields function', () => {
 
     it('buildFields does nothing if null value has been passed', () => {
       let fields = null;

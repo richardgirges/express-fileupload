@@ -70,7 +70,7 @@ describe('Test Single File Upload', function() {
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', function(done) {
@@ -132,7 +132,7 @@ describe('Test Single File Upload with useTempFiles option.', function() {
     const filePath = path.join(fileDir, fileName);
     const uploadedFilePath = path.join(uploadDir, fileName);
     const result = genUploadResult(fileName, filePath);
-    
+
     it(`upload ${fileName} with POST`, function(done) {
       clearUploadsDir();
       request(app)
@@ -149,7 +149,7 @@ describe('Test Single File Upload with useTempFiles option.', function() {
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', function(done) {
@@ -176,7 +176,7 @@ describe('Test Single File Upload with useTempFiles option.', function() {
   });
 });
 
-describe('Test Single File Upload with useTempFiles option and empty tempFileDir.', function() {
+describe('Test Single File Upload with useTempFiles option & empty tempFileDir.', function() {
   const app = server.setup({ useTempFiles: true, tempFileDir: '' });
 
   mockFiles.forEach((fileName) => {
@@ -191,7 +191,7 @@ describe('Test Single File Upload with useTempFiles option and empty tempFileDir
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 });
 
@@ -202,7 +202,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
     const filePath = path.join(fileDir, fileName);
     const uploadedFilePath = path.join(uploadDir, fileName);
     const result = genUploadResult(fileName, filePath);
-    
+
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       clearUploadsDir();
       request(app)
@@ -219,7 +219,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', function(done) {
@@ -253,7 +253,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
     const filePath = path.join(fileDir, fileName);
     const uploadedFilePath = path.join(uploadDir, fileName);
     const result = genUploadResult(fileName, filePath);
-    
+
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       clearUploadsDir();
       request(app)
@@ -270,7 +270,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', (done) => {

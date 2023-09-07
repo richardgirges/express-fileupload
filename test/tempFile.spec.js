@@ -3,12 +3,11 @@ const md5 = require('md5');
 const path = require('path');
 const request = require('supertest');
 const server = require('./server');
-const clearUploadsDir =
-  server.clearUploadsDir;
-const fileDir =
-  server.fileDir;
-const uploadDir =
-  server.uploadDir;
+
+const clearUploadsDir = server.clearUploadsDir;
+const fileDir = server.fileDir;
+const uploadDir = server.uploadDir;
+
 describe('File Upload Options Tests', function() {
   afterEach(function(done) {
     clearUploadsDir();
@@ -54,7 +53,6 @@ describe('File Upload Options Tests', function() {
         if (err) {
           return done(err);
         }
-        
         fs.stat(uploadedFilePath, done);
       });
   }
@@ -65,10 +63,8 @@ describe('File Upload Options Tests', function() {
         useTempFiles: true,
         tempFileDir: '/tmp/'
       };
-      const actualFileName =
-        'my$Invalid#fileName.png123';
-      const expectedFileName =
-        'my$Invalid#fileName.png123';
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'my$Invalid#fileName.png123';
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
@@ -81,10 +77,8 @@ describe('File Upload Options Tests', function() {
         useTempFiles: true,
         tempFileDir: '/tmp/'
       };
-      const actualFileName =
-        'my$Invalid#fileName.png123';
-      const expectedFileName =
-        'my$Invalid#fileName.png123';
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'my$Invalid#fileName.png123';
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
