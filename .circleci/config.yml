@@ -23,7 +23,21 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
+          version: '17.9.1'
+          pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
+      - node/test:
           version: '18.17.1'
+          pkg-manager: npm
+          filters:
+            tags:
+              ignore:
+                - /.*/
+      - node/test:
+          version: '19.9.0'
           pkg-manager: npm
           filters:
             tags:
