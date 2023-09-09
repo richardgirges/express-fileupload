@@ -16,14 +16,14 @@ workflows:
     jobs:
       - lintandcoverage
       - node/test:
-          version: '12.22.12'
+          version: '12.22.0'
           pkg-manager: npm
           filters:
             tags:
               ignore:
                 - /.*/
       - node/test:
-          version: '14.21.3'
+          version: '14.21.2'
           pkg-manager: npm
           filters:
             tags:
