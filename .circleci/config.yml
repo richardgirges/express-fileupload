@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.7
+  node: circleci/node@5.1.0
 jobs:
   lintandcoverage:
     docker:
@@ -16,7 +16,7 @@ workflows:
     jobs:
       - lintandcoverage
       - node/test:
-          version: '12.22.0'
+          version: '12.22.6'
           pkg-manager: npm
           filters:
             tags:
