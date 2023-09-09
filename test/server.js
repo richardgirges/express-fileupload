@@ -17,9 +17,6 @@ const clearDir = (dir) => {
   }
 };
 
-const clearUploadsDir = () => clearDir(uploadDir);
-const clearTempDir = () => clearDir(tempDir);
-
 const getUploadedFileData = (file) => ({
   md5: file.md5,
   name: file.name,
@@ -270,6 +267,7 @@ module.exports = {
   fileDir,
   tempDir,
   uploadDir,
-  clearTempDir,
-  clearUploadsDir
+  clearFileDir: () => clearDir(fileDir),
+  clearTempDir: () => clearDir(tempDir),
+  clearUploadsDir: () => clearDir(uploadDir)
 };
