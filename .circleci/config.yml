@@ -44,7 +44,7 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
-          version: '20.6.1'
+          version: '20.6.0'
           pkg-manager: npm
           filters:
             tags:
