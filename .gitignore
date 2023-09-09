@@ -15,6 +15,7 @@ node_modules
 coverage
 .nyc_output
 test/uploads
+test/files/*
 example/uploads/*
 !example/uploads/placeholder.txt
 

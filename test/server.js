@@ -3,10 +3,20 @@
 const fs = require('fs');
 const path = require('path');
 const rimraf = require('rimraf');
+const randomFile = require('rnd-file');
 
 const fileDir = path.join(__dirname, 'files');
 const tempDir = path.join(__dirname, 'temp');
 const uploadDir = path.join(__dirname, 'uploads');
+
+const mockFiles = [
+  { name: 'emptyfile.txt', size: 0 },
+  { name: 'basket.ball.bp', size: 151 * 1024 },
+  { name: 'basketball.png', size: 151 * 1024 },
+  { name: 'car.png', size: 263 * 1024 },
+  { name: 'my$Invalid#fileName.png123', size: 263 * 1024 },
+  { name: 'tree.png', size: 266 * 1024 }
+];
 
 const clearDir = (dir) => {
   try {
@@ -16,6 +26,10 @@ const clearDir = (dir) => {
     // 
   }
 };
+
+const createTestFiles = () => Promise.all(mockFiles.map((file) => {
+  return randomFile({ filePath: fileDir, fileName: file.name, fileSize: file.size });
+}));
 
 const getUploadedFileData = (file) => ({
   md5: file.md5,
@@ -269,5 +283,6 @@ module.exports = {
   uploadDir,
   clearFileDir: () => clearDir(fileDir),
   clearTempDir: () => clearDir(tempDir),
-  clearUploadsDir: () => clearDir(uploadDir)
+  clearUploadsDir: () => clearDir(uploadDir),
+  createTestFiles
 };
