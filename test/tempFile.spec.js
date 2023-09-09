@@ -8,7 +8,7 @@ const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
 
-describe('File Upload Options Tests', function() {
+describe('tempFile: Test fileupload w/ useTempFiles.', function() {
   afterEach(function(done) {
     clearUploadsDir();
     done();
@@ -56,7 +56,7 @@ describe('File Upload Options Tests', function() {
         fs.stat(uploadedFilePath, done);
       });
   }
-  describe('Testing [safeFileNames with useTempFiles] option to ensure:', function() {
+  describe('Testing [safeFileNames w/ useTempFiles] option to ensure:', function() {
     it('Does nothing to your filename when disabled.', function(done) {
       const fileUploadOptions = {
         safeFileNames: false,

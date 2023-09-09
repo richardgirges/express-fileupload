@@ -28,7 +28,7 @@ const mockBuffer = fs.readFileSync(path.join(fileDir, mockFile));
 const mockHash = md5(mockBuffer);
 
 
-describe('Test of the utilities functions', function() {
+describe('utilities: Test of the utilities functions', function() {
   beforeEach(function() {
     server.clearUploadsDir();
   });
