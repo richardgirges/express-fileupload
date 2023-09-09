@@ -6,6 +6,7 @@
   "main": "./lib/index",
   "scripts": {
     "pretest": "node ./test/pretests.js",
+    "posttest": "node ./test/posttests.js",
     "test": "nyc --reporter=html --reporter=text mocha",
     "lint": "eslint ./",
     "lint:fix": "eslint --fix ./",
