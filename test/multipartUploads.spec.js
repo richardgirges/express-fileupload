@@ -38,7 +38,7 @@ const genUploadResult = (fileName, filePath) => {
   };
 };
 
-describe('Test Directory Cleaning Method', function() {
+describe('multipartUploads: Test Directory Cleaning Method', function() {
   it('emptied "uploads" directory', function(done) {
     clearUploadsDir();
     const filesFound = fs.readdirSync(uploadDir).length;
@@ -46,7 +46,7 @@ describe('Test Directory Cleaning Method', function() {
   });
 });
 
-describe('Test Single File Upload', function() {
+describe('multipartUploads: Test Single File Upload', function() {
   const app = server.setup();
 
   mockFiles.forEach((fileName) => {
@@ -70,7 +70,7 @@ describe('Test Single File Upload', function() {
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', function(done) {
@@ -85,7 +85,10 @@ describe('Test Single File Upload', function() {
       .get('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 
   it('fail when using HEAD', function(done) {
@@ -93,11 +96,14 @@ describe('Test Single File Upload', function() {
       .head('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 });
 
-describe('Test Single File Upload w/ .mv()', function() {
+describe('multipartUploads: Test Single File Upload w/ .mv()', function() {
   const app = server.setup();
 
   mockFiles.forEach((fileName) => {
@@ -125,14 +131,14 @@ describe('Test Single File Upload w/ .mv()', function() {
   });
 });
 
-describe('Test Single File Upload with useTempFiles option.', function() {
+describe('multipartUploads: Test Single File Upload w/ useTempFiles option.', function() {
   const app = server.setup({ useTempFiles: true, tempFileDir: tempDir });
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
     const uploadedFilePath = path.join(uploadDir, fileName);
     const result = genUploadResult(fileName, filePath);
-    
+
     it(`upload ${fileName} with POST`, function(done) {
       clearUploadsDir();
       request(app)
@@ -149,7 +155,7 @@ describe('Test Single File Upload with useTempFiles option.', function() {
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', function(done) {
@@ -164,7 +170,10 @@ describe('Test Single File Upload with useTempFiles option.', function() {
       .get('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 
   it('fail when using HEAD', function(done) {
@@ -172,11 +181,14 @@ describe('Test Single File Upload with useTempFiles option.', function() {
       .head('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 });
 
-describe('Test Single File Upload with useTempFiles option and empty tempFileDir.', function() {
+describe('multipartUploads: Single File Upload w/ useTempFiles & empty tempFileDir.', function() {
   const app = server.setup({ useTempFiles: true, tempFileDir: '' });
 
   mockFiles.forEach((fileName) => {
@@ -191,18 +203,18 @@ describe('Test Single File Upload with useTempFiles option and empty tempFileDir
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 });
 
-describe('Test Single File Upload w/ .mv() Promise', function() {
+describe('multipartUploads: Test Single File Upload w/ .mv() Promise', function() {
   const app = server.setup();
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
     const uploadedFilePath = path.join(uploadDir, fileName);
     const result = genUploadResult(fileName, filePath);
-    
+
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       clearUploadsDir();
       request(app)
@@ -219,7 +231,7 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', function(done) {
@@ -234,7 +246,10 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
       .get('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 
   it('fail when using HEAD', function(done) {
@@ -242,18 +257,21 @@ describe('Test Single File Upload w/ .mv() Promise', function() {
       .head('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 });
 
-describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true', function() {
+describe('multipartUploads: Test Single File Upload w/ .mv() Promise & useTempFiles', function() {
   const app = server.setup({ useTempFiles: true, tempFileDir: tempDir });
 
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
     const uploadedFilePath = path.join(uploadDir, fileName);
     const result = genUploadResult(fileName, filePath);
-    
+
     it(`upload ${fileName} with POST w/ .mv() Promise`, function(done) {
       clearUploadsDir();
       request(app)
@@ -270,7 +288,7 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
         .attach('testFile', filePath)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 
   it('fail when no files were attached', (done) => {
@@ -285,7 +303,10 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
       .get('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 
   it('fail when using HEAD', (done) => {
@@ -293,11 +314,14 @@ describe('Test Single File Upload w/ .mv() Promise and useTempFiles set to true'
       .head('/upload/single')
       .attach('testFile', path.join(fileDir, mockFiles[0]))
       .expect(400)
-      .end(done);
+      .end((err) => {
+        // err.code === 'ECONNRESET' that means upload has been aborted.
+        done(err && err.code !== 'ECONNRESET' ? err : null);
+      });
   });
 });
 
-describe('Test Multi-File Upload', function() {
+describe('multipartUploads: Test Multi-File Upload', function() {
   const app = server.setup();
 
   it('upload multiple files with POST', (done) => {
@@ -336,7 +360,7 @@ describe('Test Multi-File Upload', function() {
   });
 });
 
-describe('Test File Array Upload', function() {
+describe('multipartUploads: Test File Array Upload', function() {
   const app = server.setup();
 
   it('upload array of files with POST', (done) => {
@@ -372,7 +396,7 @@ describe('Test File Array Upload', function() {
   });
 });
 
-describe('Test Upload With Fields', function() {
+describe('multipartUploads: Test Upload With Fields', function() {
   const app = server.setup();
   mockFiles.forEach((fileName) => {
     const filePath = path.join(fileDir, fileName);
@@ -405,11 +429,11 @@ describe('Test Upload With Fields', function() {
         .field('email', mockUser.email)
         .expect(resetBodyUploadData)
         .expect(200, result, err => (err ? done(err) : fs.stat(uploadedFilePath, done)));
-    });    
+    });
   });
 });
 
-describe('Test Aborting/Canceling during upload', function() {
+describe('multipartUploads: Test Aborting/Canceling during upload', function() {
   this.timeout(4000); // Set timeout for async tests.
   const uploadTimeout = 1000;
 

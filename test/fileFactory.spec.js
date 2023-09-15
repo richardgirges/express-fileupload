@@ -22,7 +22,7 @@ const mockFileOpts = {
   tempFilePath: mockFile
 };
 
-describe('Test of the fileFactory factory', function() {
+describe('fileFactory: Test of the fileFactory factory', function() {
   beforeEach(() => server.clearUploadsDir());
 
   it('return a file object', () => assert.ok(fileFactory(mockFileOpts)));

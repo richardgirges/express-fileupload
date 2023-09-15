@@ -7,7 +7,7 @@ const server = require('./server');
 const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 
-describe('Test Single File Upload With File Size Limit', function() {
+describe('fileLimitUloads: Test Single File Upload With File Size Limit', function() {
   let app, limitHandlerRun;
 
   beforeEach(function() {
@@ -39,7 +39,10 @@ describe('Test Single File Upload With File Size Limit', function() {
         .post('/upload/single/truncated')
         .attach('testFile', filePath)
         .expect(413)
-        .end(done);
+        .end((err) => {
+          // err.code === 'ECONNRESET' that means upload has been aborted.
+          done(err && err.code !== 'ECONNRESET' ? err : null);
+        });
     });
   });
 
@@ -63,8 +66,9 @@ describe('Test Single File Upload With File Size Limit', function() {
         .post('/upload/single/truncated')
         .attach('testFile', filePath)
         .expect(500, {response: 'Limit reached!'})
-        .end(function(err){
-          if (err) return done(err);
+        .end(function(err) {
+          // err.code === 'ECONNRESET' that means upload has been aborted.
+          if (err && err.code !== 'ECONNRESET') return done(err);
           if (!limitHandlerRun) return done('handler did not run');
           done();
         });

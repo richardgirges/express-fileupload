@@ -3,7 +3,7 @@
 const assert = require('assert');
 const processNested = require('../lib/processNested');
 
-describe('Test Convert Flatten object to Nested object', function() {
+describe('processNested: Test Convert Flatten object to Nested object', function() {
   it('With no nested data', () => {
     const data = {
         'firstname': 'John',

@@ -6,7 +6,7 @@ const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
 
-describe('File Upload Options Tests', function() {
+describe('options: File Upload Options Tests', function() {
   afterEach(function(done) {
     clearUploadsDir();
     done();

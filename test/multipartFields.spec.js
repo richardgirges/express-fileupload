@@ -17,7 +17,7 @@ let mockCars = [
   'integra'
 ];
 
-describe('Test Multipart Form Single Field Submissions', function() {
+describe('multipartFields: Test Multipart Form Single Field Submissions', function() {
   it('submit multipart user data with POST', function(done) {
     request(app)
       .post('/fields/user')
@@ -62,7 +62,7 @@ describe('Test Multipart Form Single Field Submissions', function() {
   });
 });
 
-describe('Test Multipart Form Array Field Submissions', function() {
+describe('multipartFields: Test Multipart Form Array Field Submissions', function() {
   it('submit array of data with POST', function(done) {
     let req = request(app).post('/fields/array');
 

@@ -3,7 +3,7 @@
 const assert = require('assert');
 const UploadTimer = require('../lib/uploadtimer');
 
-describe('Test UploadTimer class', () => {
+describe('uploadTimer: Test UploadTimer class', () => {
 
   it('It runs a callback function after specified timeout.', (done) => {
     const uploadTimer = new UploadTimer(1000, done);
