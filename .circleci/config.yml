@@ -14,7 +14,9 @@ jobs:
 workflows:
   test:
     jobs:
-      - lintandcoverage
+      - lintandcoverage:
+          context:
+            - COVERALLS
       - node/test:
           version: '16.20.2'
           pkg-manager: npm
