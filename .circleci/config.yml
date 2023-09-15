@@ -15,9 +15,9 @@ workflows:
   test:
     jobs:
       - lintandcoverage
-      - node/test:
           context:
             - COVERALLS
+      - node/test:
           version: '12.22.6'
           pkg-manager: npm
           filters:
@@ -25,8 +25,6 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
-          context:
-            - COVERALLS
           version: '14.19.0'
           pkg-manager: npm
           filters:
@@ -34,8 +32,6 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
-          context:
-            - COVERALLS
           version: '15.14.0'
           pkg-manager: npm
           filters:
@@ -43,8 +39,6 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
-          context:
-            - COVERALLS
           version: '16.13.2'
           pkg-manager: npm
           filters:
@@ -52,8 +46,6 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
-          context:
-            - COVERALLS
           version: '17.4.0'
           pkg-manager: npm
           filters:
