@@ -299,14 +299,13 @@ describe('utilities: Test of the utilities functions', function() {
     it('Delete a file', function(done){
       let srcPath = path.join(fileDir, mockFile);
       let dstPath = path.join(uploadDir, getTempFilename());
-
-      //copy a file
+      // copy a file
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done(err);
         }
         fs.stat(dstPath, (err)=>{
-          if (err){
+          if (err) {
             return done(err);
           }
           // delete a file
@@ -316,11 +315,10 @@ describe('utilities: Test of the utilities functions', function() {
             }
 
             fs.stat(dstPath, (err)=>{
-              if (err){
+              if (err) {
                 return done();
               }
-
-              //error if a file still exist
+              // error if a file still exist
               done(err);
             });
           });
@@ -330,7 +328,7 @@ describe('utilities: Test of the utilities functions', function() {
 
   });
 
-  describe('Test copyFile function', function(){
+  describe('Test copyFile function', function() {
     beforeEach(function() {
       server.clearUploadsDir();
     });
