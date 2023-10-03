@@ -17,6 +17,7 @@ const {
   checkAndMakeDir,
   deleteFile,
   copyFile,
+  moveFile,
   saveBufferToFile,
   parseFileName,
   uriDecodeFileName,
@@ -27,11 +28,11 @@ const mockFile = 'basketball.png';
 const mockBuffer = fs.readFileSync(path.join(fileDir, mockFile));
 const mockHash = md5(mockBuffer);
 
+const mockFileMove = 'car.png';
+const mockBufferMove = fs.readFileSync(path.join(fileDir, mockFileMove));
+const mockHashMove = md5(mockBufferMove);
 
 describe('utilities: Test of the utilities functions', function() {
-  beforeEach(function() {
-    server.clearUploadsDir();
-  });
   //debugLog tests
   describe('Test debugLog function', () => {
 
@@ -246,11 +247,43 @@ describe('utilities: Test of the utilities functions', function() {
       assert.equal(checkAndMakeDir({createParentPath: true}, dir), true);
     });
   });
+
+  describe('Test moveFile function', function() {
+    beforeEach(() => server.clearUploadsDir());
+
+    it('Should rename a file and check a hash', function(done) {
+      const srcPath = path.join(fileDir, mockFileMove);
+      const dstPath = path.join(uploadDir, mockFileMove);
+
+      moveFile(srcPath, dstPath, function(err, renamed) {
+        if (err) {
+          return done(err);
+        }
+        fs.stat(dstPath, (err) => {
+          if (err) {
+            return done(err);
+          }
+          // Match source and destination files hash.
+          const fileBuffer = fs.readFileSync(dstPath);
+          const fileHash = md5(fileBuffer);
+          if (fileHash !== mockHashMove) {
+            done(new Error('Hashes do not match'));
+          }
+          // Check that source file was deleted.
+          fs.stat(srcPath, (err) => {
+            if (err) {
+              return done(renamed ? null : new Error('Source file was not renamed'));
+            }
+            done(new Error('Source file was not deleted'));
+          });
+        });
+      });
+    });
+  });
+
   //saveBufferToFile tests
   describe('Test saveBufferToFile function', function(){
-    beforeEach(function() {
-      server.clearUploadsDir();
-    });
+    beforeEach(() => server.clearUploadsDir());
 
     it('Save buffer to a file', function(done) {
       let filePath = path.join(uploadDir, mockFile);
@@ -282,9 +315,7 @@ describe('utilities: Test of the utilities functions', function() {
   });
 
   describe('Test deleteFile function', function(){
-    beforeEach(function() {
-      server.clearUploadsDir();
-    });
+    beforeEach(() => server.clearUploadsDir());
 
     it('Failed if nonexistent file passed', function(done){
       let filePath = path.join(uploadDir, getTempFilename());
@@ -299,14 +330,13 @@ describe('utilities: Test of the utilities functions', function() {
     it('Delete a file', function(done){
       let srcPath = path.join(fileDir, mockFile);
       let dstPath = path.join(uploadDir, getTempFilename());
-
-      //copy a file
+      // copy a file
       copyFile(srcPath, dstPath, function(err){
         if (err) {
           return done(err);
         }
         fs.stat(dstPath, (err)=>{
-          if (err){
+          if (err) {
             return done(err);
           }
           // delete a file
@@ -316,11 +346,10 @@ describe('utilities: Test of the utilities functions', function() {
             }
 
             fs.stat(dstPath, (err)=>{
-              if (err){
+              if (err) {
                 return done();
               }
-
-              //error if a file still exist
+              // error if a file still exist
               done(err);
             });
           });
@@ -330,10 +359,8 @@ describe('utilities: Test of the utilities functions', function() {
 
   });
 
-  describe('Test copyFile function', function(){
-    beforeEach(function() {
-      server.clearUploadsDir();
-    });
+  describe('Test copyFile function', function() {
+    beforeEach(() => server.clearUploadsDir());
 
     it('Copy a file and check a hash', function(done) {
       let srcPath = path.join(fileDir, mockFile);

@@ -20,10 +20,17 @@ const mockFiles = [
 
 const clearDir = (dir) => {
   try {
-    if (fs.existsSync(dir)) rimraf.sync(dir);
+    try {
+      const stats = fs.statSync(dir);
+      if (stats.isDirectory()) rimraf.sync(dir);
+    } catch (statsErr) {
+      if (statsErr.code !== 'ENOENT') {
+        throw statsErr;
+      }
+    }
     fs.mkdirSync(dir, { recursive: true });
   } catch (err) {
-    // 
+    console.error(err); // eslint-disable-line
   }
 };
 
