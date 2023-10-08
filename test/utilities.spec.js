@@ -267,7 +267,7 @@ describe('utilities: Test of the utilities functions', function() {
           const fileBuffer = fs.readFileSync(dstPath);
           const fileHash = md5(fileBuffer);
           if (fileHash !== mockHashMove) {
-            done(new Error('Hashes do not match'));
+            return done(new Error('Hashes do not match'));
           }
           // Check that source file was deleted.
           fs.stat(srcPath, (err) => {
@@ -344,13 +344,8 @@ describe('utilities: Test of the utilities functions', function() {
             if (err) {
               return done(err);
             }
-
-            fs.stat(dstPath, (err)=>{
-              if (err) {
-                return done();
-              }
-              // error if a file still exist
-              done(err);
+            fs.stat(dstPath, (err)=> {
+              return err ? done() : done(new Error('File was not deleted'));
             });
           });
         });
@@ -374,10 +369,10 @@ describe('utilities: Test of the utilities functions', function() {
           if (err){
             return done(err);
           }
-          //Match source and destination files hash.
+          // Match source and destination files hash.
           let fileBuffer = fs.readFileSync(dstPath);
           let fileHash = md5(fileBuffer);
-          return (fileHash === mockHash) ? done() : done(err);
+          return fileHash === mockHash ? done() : done(new Error('Hashes do not match'));
         });
       });
     });
