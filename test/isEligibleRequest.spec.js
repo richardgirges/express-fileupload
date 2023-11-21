@@ -113,4 +113,16 @@ describe('isEligibleRequest function tests', () => {
     const result = isEligibleRequest(req);
     assert.equal(result, false);
   });
+  it('should return false if the request is empty or not provided', () => {
+    const result = isEligibleRequest();
+    assert.equal(result, false);
+  });
+  it('should return false if content-type is not specified.', () => {
+    const req = {
+      method: 'POST',
+      headers: { 'content-length': '768751' }
+    };
+    const result = isEligibleRequest(req);
+    assert.equal(result, false);
+  });
 });
