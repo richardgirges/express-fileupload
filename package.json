@@ -1,24 +1,4 @@
-{
-  "name": "express-fileupload",
-  "version": "1.4.3",
-  "author": "Richard Girges <richardgirges@gmail.com>",
-  "description": "Simple express file upload middleware that wraps around Busboy",
-  "main": "./lib/index",
-  "scripts": {
-    "pretest": "node ./test/pretests.js",
-    "posttest": "node ./test/posttests.js",
-    "test": "nyc  --reporter=html --reporter=text mocha -- -R spec",
-    "lint": "eslint ./",
-    "lint:fix": "eslint --fix ./",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
-  },
-  "dependencies": {
-    "busboy": "^1.6.0"
-  },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "keywords": [
+
     "express",
     "file-upload",
     "upload",
