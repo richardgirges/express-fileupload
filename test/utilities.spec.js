@@ -50,6 +50,16 @@ describe('utilities: Test of the utilities functions', function() {
       assert.equal(debugLog({debug: true}, testMessage), true);
     });
 
+    it('supports a custom logger', () => {
+      const calls = [];
+      const logger = {
+        log: (...args) => calls.push(args)
+      };
+      debugLog({debug: true, logger}, testMessage);
+      assert.equal(calls.length, 1);
+      assert.deepEqual(calls[0], [`Express-file-upload: ${testMessage}`]);
+    });
+
   });
   //isFunc tests
   describe('Test isFunc function', () => {
