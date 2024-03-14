@@ -42,12 +42,24 @@ describe('utilities: Test of the utilities functions', function() {
       assert.equal(debugLog(null, testMessage), false);
     });
 
-    it('debugLog returns false if option debug is false', () => {
+    it('debugLog returns false if option debug is false or logger is not set', () => {
       assert.equal(debugLog({debug: false}, testMessage), false);
+      assert.equal(debugLog({debug: true, logger: undefined}, testMessage), false);
+      assert.equal(debugLog({debug: true, logger: {}}, testMessage), false);
     });
 
-    it('debugLog returns true if option debug is true', () => {
-      assert.equal(debugLog({debug: true}, testMessage), true);
+    it('debugLog returns true if option debug is true and logger is set', () => {
+      assert.equal(debugLog({debug: true, logger: console}, testMessage), true);
+    });
+
+    it('supports a custom logger', () => {
+      const calls = [];
+      const logger = {
+        log: (...args) => calls.push(args)
+      };
+      debugLog({debug: true, logger}, testMessage);
+      assert.equal(calls.length, 1);
+      assert.deepEqual(calls[0], [`Express-file-upload: ${testMessage}`]);
     });
 
   });

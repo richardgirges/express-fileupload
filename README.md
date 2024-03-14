@@ -82,6 +82,7 @@ app.use(fileUpload({
 
 You can set `debug` option to `true` to see some logging about upload process.
 In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
+You can set a custom logger having `.log()` method to the `logger` option.
 
 It will show you whether the request is invalid and also common events triggered during upload.
 That can be really useful for troubleshooting and ***we recommend attaching debug output to each issue on Github***.
@@ -121,6 +122,7 @@ useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true<
 tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Path to store temporary files.<br />Used along with the <code>useTempFiles</code> option. By default this module uses 'tmp' folder in the current working directory.<br />You can use trailing slash, but it is not necessary.
 parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
 debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Turn on/off upload process logging. Can be useful for troubleshooting.
+logger | <ul><li><code>console</code>&nbsp;**(default)**</li><li><code>{log: function(msg: string)}</code></li></ul> | Customizable logger to write debug messages to. Console is default.
 uploadTimeout | <ul><li><code>60000</code>&nbsp;**(default)**</li><li><code>Integer</code></ul> | This defines how long to wait for data before aborting. Set to 0 if you want to turn off timeout checks.
 
 # Help Wanted
