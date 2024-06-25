@@ -199,25 +199,32 @@ describe('utilities: Test of the utilities functions', function() {
   describe('Test buildOptions function', () => {
 
     const source = { option1: '1', option2: '2' };
-    const sourceAddon = { option3: '3'};
-    const expected = { option1: '1', option2: '2' };
-    const expectedAddon = { option1: '1', option2: '2', option3: '3'};
+    const sourceAddon = { option3: '3', hashAlgorithm: 'sha256'};
+    const expected = { option1: '1', option2: '2', hashAlgorithm: 'md5' };
+    const expectedAddon = { option1: '1', option2: '2', option3: '3', hashAlgorithm: 'sha256'};
 
-    it('buildOptions returns and equal object to the object which was paased', () => {
-      let result = buildOptions(source);
-      assert.deepStrictEqual(result, source);
-    });
+    it(
+      'buildOptions returns an equal object to the object which was passed + hashAlgorithm '
+      + 'property',
+      () => {
+        let result = buildOptions(source);
+        assert.deepStrictEqual(result, expected);
+      }
+    );
 
     it('buildOptions doesnt add non object or null arguments to the result', () => {
       let result = buildOptions(source, 2, '3', null);
       assert.deepStrictEqual(result, expected);
     });
 
-    it('buildOptions adds value to the result from the several source argumets', () => {
+    it('buildOptions adds value to the result from the several source arguments', () => {
       let result = buildOptions(source, sourceAddon);
       assert.deepStrictEqual(result, expectedAddon);
     });
 
+    it('buildOptions throws an error when given an unsupported hashAlgorithm', () => {
+      assert.throws(() => buildOptions({ hashAlgorithm: 'not-actual-algo' }));
+    });
   });
   //buildFields tests
   describe('Test buildFields function', () => {
