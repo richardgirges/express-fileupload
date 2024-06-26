@@ -1,6 +1,6 @@
 {
   "name": "express-fileupload",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "author": "Richard Girges <richardgirges@gmail.com>",
   "description": "Simple express file upload middleware that wraps around Busboy",
   "main": "./lib/index",

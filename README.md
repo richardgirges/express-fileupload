@@ -50,7 +50,8 @@ The **req.files.foo** object will contain the following:
 
 * Before 1.0.0, `md5` is an MD5 checksum of the uploaded file.
 * From 1.0.0 until 1.1.1, `md5` is a function to compute an MD5 hash ([Read about it here.](https://github.com/richardgirges/express-fileupload/releases/tag/v1.0.0-alpha.1)).
-* From 1.1.1 onward, `md5` is reverted back to MD5 checksum value and also added full MD5 support in case you are using temporary files.
+* From 1.1.1 until 1.5.1, `md5` is reverted back to MD5 checksum value and also added full MD5 support in case you are using temporary files.
+* From 1.5.1 onward, `md5` still holds the checksum value, but the checksum is generated with the provided `hashAlgorithm` option. The property name remains `md5` for backwards compatibility.
 
 
 ### Examples
@@ -124,6 +125,7 @@ parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</
 debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Turn on/off upload process logging. Can be useful for troubleshooting.
 logger | <ul><li><code>console</code>&nbsp;**(default)**</li><li><code>{log: function(msg: string)}</code></li></ul> | Customizable logger to write debug messages to. Console is default.
 uploadTimeout | <ul><li><code>60000</code>&nbsp;**(default)**</li><li><code>Integer</code></ul> | This defines how long to wait for data before aborting. Set to 0 if you want to turn off timeout checks.
+hashAlgorithm | <ul><li><code>md5</code>&nbsp;**(default)**</li><li><code>String</code></li></ul> | Allows the usage of alternative hashing algorithms for file integrity checks. This option must be an algorithm that is supported on the running system's installed OpenSSL version. On recent releases of OpenSSL, <code>openssl list -digest-algorithms</code> will display the available digest algorithms.
 
 # Help Wanted
 Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcome! 
