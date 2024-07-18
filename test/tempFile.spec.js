@@ -3,6 +3,7 @@ const md5 = require('md5');
 const path = require('path');
 const request = require('supertest');
 const server = require('./server');
+const assert = require('assert');
 
 const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
@@ -24,7 +25,8 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
     options,
     actualFileNameToUpload,
     expectedFileNameOnFileSystem,
-    done
+    done,
+    expectedFilePermissions = 0o644
   ) {
 
     let filePath = path.join(fileDir, actualFileNameToUpload);
@@ -53,7 +55,13 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
         if (err) {
           return done(err);
         }
-        fs.stat(uploadedFilePath, done);
+        fs.stat(uploadedFilePath, function(err, stats) {
+          if (err) {
+            return done(err);
+          }
+          assert.equal(stats.mode & 0o777, expectedFilePermissions);
+          done();
+        });
       });
   }
   describe('Testing [safeFileNames w/ useTempFiles] option to ensure:', function() {
@@ -88,7 +96,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
     });
 
     it(
-      'Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.', 
+      'Strips away all non-alphanumeric characters (excluding hyphens/underscores) when enabled.',
       function(done) {
         const fileUploadOptions = {
           safeFileNames: true,
@@ -106,7 +114,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
       });
 
     it(
-      'Accepts a regex for stripping (decidedly) "invalid" characters from filename.', 
+      'Accepts a regex for stripping (decidedly) "invalid" characters from filename.',
       function(done) {
         const fileUploadOptions = {
           safeFileNames: /[$#]/g,
@@ -122,5 +130,51 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
           done
         );
       });
+  });
+  describe('Testing [tempFilePermissions w/ useTempFiles] option to ensure:', function() {
+    it('Does nothing to your filename when disabled.', function(done) {
+      const fileUploadOptions = {
+        safeFileNames: false,
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+        tempFilePermissions: 0o666
+      };
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'my$Invalid#fileName.png123';
+      executeFileUploadTestWalk(
+        fileUploadOptions,
+        actualFileName,
+        expectedFileName,
+        done
+      );
+    });
+    it('Respects option boundaries when provided.', function(done) {
+      const fileUploadOptions = {
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+        tempFilePermissions: 0o7777
+      };
+      const expressFileupload = require('../lib/index');
+      assert.throws(function() {
+        expressFileupload(fileUploadOptions);
+      }, Error, 'File permissions out of bounds');
+      done();
+    });
+    it('Applies permissions in filesystem.', function(done) {
+      const fileUploadOptions = {
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+        tempFilePermissions: 0o600
+      };
+      const actualFileName = 'my$Invalid#fileName.png123';
+      const expectedFileName = 'my$Invalid#fileName.png123';
+      executeFileUploadTestWalk(
+        fileUploadOptions,
+        actualFileName,
+        expectedFileName,
+        done,
+        0o600
+      );
+    });
   });
 });
