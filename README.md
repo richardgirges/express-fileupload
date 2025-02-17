@@ -7,7 +7,7 @@ Simple express middleware for uploading files.
 [![Coverage Status](https://img.shields.io/coveralls/richardgirges/express-fileupload.svg)](https://coveralls.io/r/richardgirges/express-fileupload)
 
 # Help us Improve express-fileupload
-This package is still very much supported and maintained. But the more help the better. If you're interested any of the following:
+This package is still very much supported and maintained. But the more help the better. If you're interested in any of the following:
 * Ticket and PR triage
 * Feature scoping and implementation
 * Maintenance (upgrading packages, fixing security vulnerabilities, etc)
@@ -53,7 +53,6 @@ The **req.files.foo** object will contain the following:
 * From 1.1.1 until 1.5.1, `md5` is reverted back to MD5 checksum value and also added full MD5 support in case you are using temporary files.
 * From 1.5.1 onward, `md5` still holds the checksum value, but the checksum is generated with the provided `hashAlgorithm` option. The property name remains `md5` for backwards compatibility.
 
-
 ### Examples
 * [Example Project](https://github.com/richardgirges/express-fileupload/tree/master/example)
 * [Basic File Upload](https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload)
@@ -72,7 +71,7 @@ app.use(fileUpload({
 Use temp files instead of memory for managing the upload process.
 
 ```javascript
-// Note that this option available for versions 1.0.0 and newer. 
+// Note that this option is available for versions 1.0.0 and newer. 
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
@@ -81,8 +80,8 @@ app.use(fileUpload({
 
 ### Using debug option
 
-You can set `debug` option to `true` to see some logging about upload process.
-In this case middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
+You can set `debug` option to `true` to see some logging about the upload process.
+In this case, middleware uses `console.log` and adds `Express-file-upload` prefix for outputs.
 You can set a custom logger having `.log()` method to the `logger` option.
 
 It will show you whether the request is invalid and also common events triggered during upload.
@@ -105,7 +104,7 @@ Express-file-upload: Cleaning up temporary file /node/express-fileupload/test/te
 * `New upload started testFile->car.png` says that new upload started with field `testFile` and file name `car.png`.
 * `Uploading testFile->car.png, bytes:21232...` shows current progress for each new data chunk.
 * `Upload timeout` means that no data came during `uploadTimeout`.
-* `Cleaning up temporary file` Here finaly we see cleaning up of the temporary file because of upload timeout reached.
+* `Cleaning up temporary file` Here finally we see cleaning up of the temporary file because of upload timeout reached.
 
 ### Available Options
 Pass in non-Busboy options directly to the middleware. These are express-fileupload specific options.
@@ -117,9 +116,9 @@ uriDecodeFileNames | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code
 safeFileNames | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li>regex</li></ul> | Strips characters from the upload's filename. You can use custom regex to determine what to strip. If set to `true`, non-alphanumeric characters _except_ dashes and underscores will be stripped. This option is off by default.<br /><br />**Example #1 (strip slashes from file names):** `app.use(fileUpload({ safeFileNames: /\\/g }))`<br />**Example #2:** `app.use(fileUpload({ safeFileNames: true }))`
 preserveExtension | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li><li><code>*Number*</code></li></ul> | Preserves filename extension when using <code>safeFileNames</code> option. If set to <code>true</code>, will default to an extension length of 3. If set to <code>*Number*</code>, this will be the max allowable extension length. If an extension is smaller than the extension length, it remains untouched. If the extension is longer, it is shifted.<br /><br />**Example #1 (true):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: true }));</code><br />*myFileName.ext* --> *myFileName.ext*<br /><br />**Example #2 (max extension length 2, extension shifted):**<br /><code>app.use(fileUpload({ safeFileNames: true, preserveExtension: 2 }));</code><br />*myFileName.ext* --> *myFileNamee.xt*
 abortOnLimit | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | Returns a HTTP 413 when the file is bigger than the size limit if true. Otherwise, it will add a <code>truncated = true</code> to the resulting file structure.
-responseOnLimit | <ul><li><code>'File size limit has been reached'</code>&nbsp;**(default)**</li><li><code>*String*</code></ul> | Response which will be send to client if file size limit exceeded when abortOnLimit set to true.
+responseOnLimit | <ul><li><code>'File size limit has been reached'</code>&nbsp;**(default)**</li><li><code>*String*</code></ul> | Response which will be sent to client if file size limit exceeded when abortOnLimit set to true.
 limitHandler | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>function(req, res, next)</code></li></ul> | User defined limit handler which will be invoked if the file is bigger than configured limits.
-useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | By default this module uploads files into RAM. Setting this option to True turns on using temporary files instead of utilising RAM. This avoids memory overflow issues when uploading large files or in case of uploading lots of files at same time.
+useTempFiles | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | By default this module uploads files into RAM. Setting this option to True turns on using temporary files instead of utilizing RAM. This avoids memory overflow issues when uploading large files or in case of uploading lots of files at the same time.
 tempFileDir | <ul><li><code>String</code>&nbsp;**(path)**</li></ul> | Path to store temporary files.<br />Used along with the <code>useTempFiles</code> option. By default this module uses 'tmp' folder in the current working directory.<br />You can use trailing slash, but it is not necessary.
 tempFilePermissions | <ul><li>644&nbsp;**(default)**</li><li><code>Integer</code></li></ul> | Permissions applied to temporary files.<br />Used along with the <code>useTempFiles</code> option. By default this module uses '644' permissions.<br />You should use this option if using shared hosting - to protect user data from being accessed by other users on the server.
 parseNested | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></li></ul> | By default, req.body and req.files are flattened like this: <code>{'name': 'John', 'hobbies[0]': 'Cinema', 'hobbies[1]': 'Bike'}</code><br /><br/>When this option is enabled they are parsed in order to be nested like this: <code>{'name': 'John', 'hobbies': ['Cinema', 'Bike']}</code>
