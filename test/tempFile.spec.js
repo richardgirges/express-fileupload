@@ -4,10 +4,16 @@ const path = require('path');
 const request = require('supertest');
 const server = require('./server');
 const assert = require('assert');
+const process = require('process');
 
 const clearUploadsDir = server.clearUploadsDir;
 const fileDir = server.fileDir;
 const uploadDir = server.uploadDir;
+
+const tempFileDir = '/tmp/';
+
+/** Default permissions different for win32 and linux systems */
+const defaultFilePermissions = process.platform === 'win32' ? 0o666 : 0o644;
 
 describe('tempFile: Test fileupload w/ useTempFiles.', function() {
   afterEach(function(done) {
@@ -26,7 +32,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
     actualFileNameToUpload,
     expectedFileNameOnFileSystem,
     done,
-    expectedFilePermissions = 0o644
+    expectedFilePermissions = defaultFilePermissions
   ) {
 
     let filePath = path.join(fileDir, actualFileNameToUpload);
@@ -69,7 +75,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
       const fileUploadOptions = {
         safeFileNames: false,
         useTempFiles: true,
-        tempFileDir: '/tmp/'
+        tempFileDir
       };
       const actualFileName = 'my$Invalid#fileName.png123';
       const expectedFileName = 'my$Invalid#fileName.png123';
@@ -83,7 +89,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
     it('Is disabled by default.', function(done) {
       const fileUploadOptions = {
         useTempFiles: true,
-        tempFileDir: '/tmp/'
+        tempFileDir
       };
       const actualFileName = 'my$Invalid#fileName.png123';
       const expectedFileName = 'my$Invalid#fileName.png123';
@@ -101,7 +107,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
         const fileUploadOptions = {
           safeFileNames: true,
           useTempFiles: true,
-          tempFileDir: '/tmp/'
+          tempFileDir
         };
         const actualFileName = 'my$Invalid#fileName.png123';
         const expectedFileName = 'myInvalidfileNamepng123';
@@ -119,7 +125,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
         const fileUploadOptions = {
           safeFileNames: /[$#]/g,
           useTempFiles: true,
-          tempFileDir: '/tmp/'
+          tempFileDir
         };
         const actualFileName = 'my$Invalid#fileName.png123';
         const expectedFileName = 'myInvalidfileName.png123';
@@ -136,7 +142,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
       const fileUploadOptions = {
         safeFileNames: false,
         useTempFiles: true,
-        tempFileDir: '/tmp/',
+        tempFileDir,
         tempFilePermissions: 0o666
       };
       const actualFileName = 'my$Invalid#fileName.png123';
@@ -151,7 +157,7 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
     it('Respects option boundaries when provided.', function(done) {
       const fileUploadOptions = {
         useTempFiles: true,
-        tempFileDir: '/tmp/',
+        tempFileDir,
         tempFilePermissions: 0o7777
       };
       const expressFileupload = require('../lib/index');
@@ -163,17 +169,20 @@ describe('tempFile: Test fileupload w/ useTempFiles.', function() {
     it('Applies permissions in filesystem.', function(done) {
       const fileUploadOptions = {
         useTempFiles: true,
-        tempFileDir: '/tmp/',
+        tempFileDir,
         tempFilePermissions: 0o600
       };
       const actualFileName = 'my$Invalid#fileName.png123';
       const expectedFileName = 'my$Invalid#fileName.png123';
+      // Expected file perms after moving it to the destination folder depends on the platform.
+      const expectedFilePermissions = process.platform === 'win32' ? 0o666 : 0o600;
+
       executeFileUploadTestWalk(
         fileUploadOptions,
         actualFileName,
         expectedFileName,
         done,
-        0o600
+        expectedFilePermissions
       );
     });
   });
