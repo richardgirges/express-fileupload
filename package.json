@@ -12,9 +12,6 @@
     "lint:fix": "eslint --fix ./",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
-  "dependencies": {
-    "busboy": "^1.6.0"
-  },
   "engines": {
     "node": ">=12.0.0"
   },
@@ -30,6 +27,9 @@
   ],
   "license": "MIT",
   "repository": "richardgirges/express-fileupload",
+  "dependencies": {
+    "@fastify/busboy": "^2.0.0"
+  },
   "devDependencies": {
     "coveralls": "^3.1.1",
     "eslint": "^7.31.0",
