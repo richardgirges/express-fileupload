@@ -4,7 +4,7 @@ orbs:
 jobs:
   lintandcoverage:
     docker:
-      - image: cimg/node:16.20.2
+      - image: cimg/node:18.20.8
     steps:
       - checkout
       - run: npm install
@@ -25,28 +25,28 @@ workflows:
               ignore:
                 - /.*/
       - node/test:
-          version: '17.9.1'
+          version: '18.20.8'
           pkg-manager: npm
           filters:
             tags:
               ignore:
                 - /.*/
       - node/test:
-          version: '18.17.1'
+          version: '20.19.3'
           pkg-manager: npm
           filters:
             tags:
               ignore:
                 - /.*/
       - node/test:
-          version: '19.9.0'
+          version: '22.17.0'
           pkg-manager: npm
           filters:
             tags:
               ignore:
                 - /.*/
       - node/test:
-          version: '20.6.0'
+          version: '24.3.0'
           pkg-manager: npm
           filters:
             tags:
