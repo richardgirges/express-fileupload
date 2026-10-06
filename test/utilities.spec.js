@@ -21,7 +21,8 @@ const {
   saveBufferToFile,
   parseFileName,
   uriDecodeFileName,
-  isSafeFromPollution
+  isSafeFromPollution,
+  validateUploadPath
 } = require('../lib/utilities');
 
 const mockFile = 'basketball.png';
@@ -504,6 +505,147 @@ describe('utilities: Test of the utilities functions', function() {
     invalidInsertions.forEach((insertion) => {
       it(`Key ${insertion.key} should not be valid for ${JSON.stringify(insertion.base)}`, () => {
         assert.equal(isSafeFromPollution(insertion.base, insertion.key), false);
+      });
+    });
+  });
+
+  describe('Test validateUploadPath function', function() {
+    const testUploadDir = uploadDir;
+
+    describe('When uploadDir is not set', () => {
+      it('Returns path unchanged when uploadDir is null', () => {
+        const options = { uploadDir: null };
+        const testPath = '../../../etc/passwd';
+        assert.equal(validateUploadPath(options, testPath), testPath);
+      });
+
+      it('Returns path unchanged when validatePaths is false', () => {
+        const options = { uploadDir: testUploadDir, validatePaths: false };
+        const testPath = '../../../etc/passwd';
+        assert.equal(validateUploadPath(options, testPath), testPath);
+      });
+    });
+
+    describe('Path traversal attack prevention', () => {
+      const options = { uploadDir: testUploadDir, validatePaths: true };
+
+      it('Blocks relative path traversal with ../', () => {
+        assert.throws(() => {
+          validateUploadPath(options, '../../../etc/passwd');
+        }, /Path traversal detected/);
+      });
+
+      it('Blocks URL encoded path traversal', () => {
+        assert.throws(() => {
+          validateUploadPath(options, '%2e%2e%2f%2e%2e%2fetc%2fpasswd');
+        }, /Path traversal detected/);
+      });
+
+      it('Blocks double URL encoded path traversal', () => {
+        assert.throws(() => {
+          validateUploadPath(options, '%252e%252e%252f');
+        }, /Path traversal detected/);
+      });
+
+      it('Blocks Windows-style path traversal', () => {
+        assert.throws(() => {
+          validateUploadPath(options, '..\\..\\windows\\system32');
+        }, /Path traversal detected/);
+      });
+
+      it('Blocks absolute paths by default', () => {
+        assert.throws(() => {
+          validateUploadPath(options, '/etc/passwd');
+        }, /Absolute paths are not allowed/);
+      });
+
+      it('Blocks null byte injection', () => {
+        assert.throws(() => {
+          validateUploadPath(options, 'file.txt%00.php');
+        }, /Null bytes not allowed/);
+      });
+
+      it('Blocks paths that escape upload directory', () => {
+        assert.throws(() => {
+          validateUploadPath(options, 'subdir/../../outside');
+        }, /Path traversal detected|Path escapes upload directory/);
+      });
+
+      it('Blocks overly long paths', () => {
+        const longPath = 'A'.repeat(2000);
+        assert.throws(() => {
+          validateUploadPath(options, longPath);
+        }, /File path too long/);
+      });
+
+      it('Blocks empty or invalid paths', () => {
+        assert.throws(() => {
+          validateUploadPath(options, '');
+        }, /Invalid file path/);
+
+        assert.throws(() => {
+          validateUploadPath(options, null);
+        }, /Invalid file path/);
+      });
+    });
+
+    describe('Valid paths are allowed', () => {
+      const options = { uploadDir: testUploadDir, validatePaths: true };
+
+      it('Allows simple filename', () => {
+        const result = validateUploadPath(options, 'test.txt');
+        assert.ok(result.includes('test.txt'));
+      });
+
+      it('Allows subdirectory paths', () => {
+        const result = validateUploadPath(options, 'subdir/test.txt');
+        assert.ok(result.includes('subdir'));
+        assert.ok(result.includes('test.txt'));
+      });
+
+      it('Allows nested subdirectories', () => {
+        const result = validateUploadPath(options, 'sub1/sub2/test.txt');
+        assert.ok(result.includes('sub1'));
+        assert.ok(result.includes('sub2'));
+        assert.ok(result.includes('test.txt'));
+      });
+
+      it('Preserves filenames containing a literal percent sign', () => {
+        const result = validateUploadPath(options, 'file%.txt');
+        assert.equal(result, path.resolve(testUploadDir, 'file%.txt'));
+      });
+
+      it('Decodes valid encoded filenames within the upload directory', () => {
+        const result = validateUploadPath(options, 'subdir/file%2520name.txt');
+        assert.equal(result, path.resolve(testUploadDir, 'subdir/file name.txt'));
+      });
+
+      it('Allows an upload directory at the filesystem root', () => {
+        const rootDir = path.parse(path.resolve(testUploadDir)).root;
+        const result = validateUploadPath({ uploadDir: rootDir }, 'test.txt');
+        assert.equal(result, path.resolve(rootDir, 'test.txt'));
+      });
+    });
+
+    describe('Absolute path option', () => {
+      it('Allows absolute paths when option is set', () => {
+        const options = {
+          uploadDir: testUploadDir,
+          validatePaths: true,
+          allowAbsolutePaths: true
+        };
+        const absPath = path.resolve(testUploadDir, 'test.txt');
+        const result = validateUploadPath(options, absPath);
+        assert.ok(result.includes('test.txt'));
+      });
+
+      it('Still rejects absolute paths outside the upload directory', () => {
+        const options = { uploadDir: testUploadDir, allowAbsolutePaths: true };
+        const outsidePath = path.resolve(`${testUploadDir}-outside`, 'test.txt');
+        assert.throws(
+          () => validateUploadPath(options, outsidePath),
+          /Path escapes upload directory/
+        );
       });
     });
   });

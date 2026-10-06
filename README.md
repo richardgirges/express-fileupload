@@ -127,6 +127,54 @@ debug | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code><
 logger | <ul><li><code>console</code>&nbsp;**(default)**</li><li><code>{log: function(msg: string)}</code></li></ul> | Customizable logger to write debug messages to. Console is default.
 uploadTimeout | <ul><li><code>60000</code>&nbsp;**(default)**</li><li><code>Integer</code></ul> | This defines how long to wait for data before aborting. Set to 0 if you want to turn off timeout checks.
 hashAlgorithm | <ul><li><code>md5</code>&nbsp;**(default)**</li><li><code>String</code></li></ul> | Allows the usage of alternative hashing algorithms for file integrity checks. This option must be an algorithm that is supported on the running system's installed OpenSSL version. On recent releases of OpenSSL, <code>openssl list -digest-algorithms</code> will display the available digest algorithms.
+uploadDir | <ul><li><code>null</code>&nbsp;**(default)**</li><li><code>String</code>&nbsp;**(path)**</li></ul> | **Security:** Base directory for file uploads. When set, enables automatic path validation to prevent path traversal attacks. Files can only be moved to locations within this directory.<br /><br />**Example:**<br /><code>app.use(fileUpload({ uploadDir: './uploads' }));</code>
+validatePaths | <ul><li><code>true</code>&nbsp;**(default)**</li><li><code>false</code></ul> | **Security:** Enable path validation. Only active when <code>uploadDir</code> is set. Validates file paths to prevent path traversal, URL encoding attacks, null byte injection, and other file system exploits. Disable only if you handle validation yourself.
+allowAbsolutePaths | <ul><li><code>false</code>&nbsp;**(default)**</li><li><code>true</code></ul> | **Security:** Allow absolute paths in file.mv() calls. By default, only relative paths within <code>uploadDir</code> are allowed. Enable this only if you need to move files to specific absolute paths and understand the security implications.
+
+### Security Best Practices
+
+**Important:** Always validate user-provided file paths to prevent path traversal attacks. The `uploadDir` option provides automatic protection:
+
+```javascript
+// ✅ SECURE: Enable path validation
+app.use(fileUpload({
+  uploadDir: './uploads',
+  createParentPath: true
+}));
+
+app.post('/upload', (req, res) => {
+  let sampleFile = req.files.sampleFile;
+
+  // Safe: path is validated against uploadDir
+  sampleFile.mv('documents/file.pdf', (err) => {
+    if (err) return res.status(500).send(err);
+    res.send('File uploaded!');
+  });
+});
+```
+
+```javascript
+// ❌ INSECURE: No path validation (legacy mode)
+app.use(fileUpload()); // No uploadDir set
+
+app.post('/upload', (req, res) => {
+  let sampleFile = req.files.sampleFile;
+
+  // Dangerous: user could pass ../../../../etc/passwd
+  let uploadPath = req.body.path; // User-controlled!
+  sampleFile.mv(uploadPath, (err) => {
+    if (err) return res.status(500).send(err);
+    res.send('File uploaded!');
+  });
+});
+```
+
+The path validation automatically blocks:
+- Path traversal attempts (`../../../etc/passwd`)
+- URL encoded attacks (`%2e%2e%2f`)
+- Null byte injection (`file.txt%00.php`)
+- Absolute paths (unless `allowAbsolutePaths` is enabled)
+- Paths that escape the upload directory
 
 # Help Wanted
 Looking for additional maintainers. Please contact `richardgirges [ at ] gmail.com` if you're interested. Pull Requests are welcome! 

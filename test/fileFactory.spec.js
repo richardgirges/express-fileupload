@@ -75,4 +75,62 @@ describe('fileFactory: Test of the fileFactory factory', function() {
       });
     });
   });
+
+  [false, true].forEach((useTempFiles) => {
+    describe(`Path validation with useTempFiles=${useTempFiles}`, function() {
+      const destination = path.join('nested', mockFileName);
+      const savedPath = path.join(server.uploadDir, destination);
+      const escapedPath = path.resolve(server.uploadDir, '../rejected-upload.png');
+      const tempFilePath = path.join(server.tempDir, mockFileName);
+
+      beforeEach(() => server.clearTempDir());
+      afterEach(() => server.clearTempDir());
+
+      const createFile = () => {
+        if (useTempFiles) fs.copyFileSync(mockFile, tempFilePath);
+        return fileFactory(Object.assign({}, mockFileOpts, { tempFilePath }), {
+          uploadDir: server.uploadDir,
+          validatePaths: true,
+          createParentPath: true,
+          useTempFiles
+        });
+      };
+
+      const checkRejectedPath = (err) => {
+        assert.ok(err instanceof Error);
+        assert.match(err.message, /Path traversal detected/);
+        assert.equal(fs.existsSync(escapedPath), false);
+        assert.equal(fs.existsSync(path.dirname(savedPath)), false);
+        if (useTempFiles) assert.ok(fs.existsSync(tempFilePath));
+      };
+
+      const checkSavedFile = () => {
+        assert.deepEqual(fs.readFileSync(savedPath), mockBuffer);
+        if (useTempFiles) assert.equal(fs.existsSync(tempFilePath), false);
+      };
+
+      it('Returns validation errors to callbacks and allows a safe retry', (done) => {
+        const file = createFile();
+        file.mv('../rejected-upload.png', (err) => {
+          checkRejectedPath(err);
+          file.mv(destination, (moveErr) => {
+            assert.ifError(moveErr);
+            checkSavedFile();
+            done();
+          });
+        });
+      });
+
+      it('Rejects invalid paths through promises and allows a safe retry', () => {
+        const file = createFile();
+        return file.mv('../rejected-upload.png').then(
+          () => assert.fail('Expected path validation to reject the upload'),
+          (err) => {
+            checkRejectedPath(err);
+            return file.mv(destination).then(checkSavedFile);
+          }
+        );
+      });
+    });
+  });
 });
