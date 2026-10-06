@@ -609,6 +609,22 @@ describe('utilities: Test of the utilities functions', function() {
         assert.ok(result.includes('sub2'));
         assert.ok(result.includes('test.txt'));
       });
+
+      it('Preserves filenames containing a literal percent sign', () => {
+        const result = validateUploadPath(options, 'file%.txt');
+        assert.equal(result, path.resolve(testUploadDir, 'file%.txt'));
+      });
+
+      it('Decodes valid encoded filenames within the upload directory', () => {
+        const result = validateUploadPath(options, 'subdir/file%2520name.txt');
+        assert.equal(result, path.resolve(testUploadDir, 'subdir/file name.txt'));
+      });
+
+      it('Allows an upload directory at the filesystem root', () => {
+        const rootDir = path.parse(path.resolve(testUploadDir)).root;
+        const result = validateUploadPath({ uploadDir: rootDir }, 'test.txt');
+        assert.equal(result, path.resolve(rootDir, 'test.txt'));
+      });
     });
 
     describe('Absolute path option', () => {
@@ -621,6 +637,15 @@ describe('utilities: Test of the utilities functions', function() {
         const absPath = path.resolve(testUploadDir, 'test.txt');
         const result = validateUploadPath(options, absPath);
         assert.ok(result.includes('test.txt'));
+      });
+
+      it('Still rejects absolute paths outside the upload directory', () => {
+        const options = { uploadDir: testUploadDir, allowAbsolutePaths: true };
+        const outsidePath = path.resolve(`${testUploadDir}-outside`, 'test.txt');
+        assert.throws(
+          () => validateUploadPath(options, outsidePath),
+          /Path escapes upload directory/
+        );
       });
     });
   });
