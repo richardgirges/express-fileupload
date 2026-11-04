@@ -69,6 +69,42 @@ describe('isEligibleRequest function tests', () => {
     const result = isEligibleRequest(req);
     assert.equal(result, false);
   });
+  it('should return true if the content-type has a quoted boundary & other parameters', () => {
+    const req = {
+      method: 'POST',
+      headers: {
+        'content-length': '768751',
+        'content-type': 'multipart/form-data; charset=utf-8; boundary="gc0pJq0M:08jU534c0p"'
+      }
+    };
+    const result = isEligibleRequest(req);
+    assert.equal(result, true);
+  });
+  it('should return false if the boundary has characters RFC 2046 does not allow', () => {
+    const req = {
+      method: 'POST',
+      headers: {
+        'content-length': '768751',
+        'content-type': 'multipart/form-data; boundary=<gc0pJq0M@08jU534c0p>'
+      }
+    };
+    const result = isEligibleRequest(req);
+    assert.equal(result, false);
+  });
+  it('should return false quickly if the content-type ends in a run of semicolons', () => {
+    const req = {
+      method: 'POST',
+      headers: {
+        'content-length': '768751',
+        // Takes seconds if the content-type regex backtracks exponentially (ReDoS)
+        'content-type': 'multipart/form-data; boundary=x' + ';'.repeat(28) + '!'
+      }
+    };
+    const start = Date.now();
+    const result = isEligibleRequest(req);
+    assert.equal(result, false);
+    assert.ok(Date.now() - start < 1000, 'content-type check took longer than 1 second');
+  });
   it('should return false if the request method is not POST, PUT or PATCH', () => {
     const req = {
       method: 'GET',
